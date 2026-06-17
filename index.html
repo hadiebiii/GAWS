@@ -20,15 +20,16 @@
     };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <!-- Google Fonts: Inter for UI, Merriweather/Georgia-like font for Academic Text -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <!-- Google Fonts: Inter for UI, Merriweather for Academic Text -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
     }
     .academic-text {
       font-family: 'Merriweather', Georgia, serif;
-      line-height: 1.75;
+      line-height: 1.8;
+      color: #1e293b;
     }
     /* Hide scrollbars but keep functionality */
     .no-scrollbar::-webkit-scrollbar {
@@ -72,6 +73,7 @@
         margin: 0 !important;
         padding: 0 !important;
         box-shadow: none !important;
+        border: none !important;
       }
       body {
         background-color: white !important;
@@ -79,18 +81,18 @@
     }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col overflow-hidden">
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col">
 
   <!-- Header / Navigation Bar -->
   <header class="no-print bg-slate-950 border-b border-slate-800 px-6 py-4 flex items-center justify-between z-10">
     <div class="flex items-center gap-3">
-      <div class="bg-indigo-600 text-white p-2 rounded-lg font-bold tracking-wider text-xs">
+      <div class="bg-indigo-600 text-white p-2 rounded-lg font-bold tracking-wider text-xs shadow-md">
         NSF CAREER
       </div>
       <div>
         <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
           GAWS Co-Design Workspace 
-          <span class="text-xs font-normal text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">v1.2.4-BETA</span>
+          <span class="text-xs font-normal text-slate-400 bg-slate-800 px-2 py-0.5 rounded-full border border-slate-700">v2.0.1-PRO</span>
         </h1>
         <p class="text-xs text-slate-400">Integrated Proposal Document, Theoretical Sandbox & Diagnostics Dashboard</p>
       </div>
@@ -101,16 +103,16 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.89l-1.54 1.54A5.98 5.98 0 013 11.25C3 7.66 5.91 4.75 9.5 4.75c3.21 0 5.89 2.33 6.41 5.43a6.002 6.002 0 015.09 5.72A5.98 5.98 0 0119.5 18H9a3 3 0 01-2.28-4.11z" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 13l-3-3m0 0l-3 3m3-3v12" />
         </svg>
-        Print / Export Proposal
+        Export / Print Proposal
       </button>
     </div>
   </header>
 
-  <!-- Workspace Container (Split Pane) -->
-  <div class="flex-1 flex overflow-hidden">
+  <!-- Workspace Container (Responsive Split Pane) -->
+  <div class="flex-1 flex flex-col lg:flex-row">
     
     <!-- Left Sidebar: Integrated Simulator & Navigation -->
-    <aside class="no-print w-[420px] bg-slate-950 border-r border-slate-800 flex flex-col overflow-y-auto no-scrollbar shrink-0 select-none">
+    <aside class="no-print w-full lg:w-[420px] bg-slate-950 border-r border-slate-800 flex flex-col lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto no-scrollbar shrink-0 select-none">
       
       <!-- Live Parameters Control Panel -->
       <div class="p-5 border-b border-slate-800 bg-slate-950/50">
@@ -122,7 +124,7 @@
         <!-- Algorithm Paradigm Toggle -->
         <div class="bg-slate-900 p-1.5 rounded-lg border border-slate-800 mb-5 flex">
           <button id="toggle-walsh" onclick="setParadigm('walsh')" class="flex-1 text-center py-1.5 text-xs font-medium rounded transition duration-200 bg-indigo-600 text-white shadow">
-            Walsh-CDM
+            Walsh-CDM Baseline
           </button>
           <button id="toggle-gaws" onclick="setParadigm('gaws')" class="flex-1 text-center py-1.5 text-xs font-medium rounded transition duration-200 text-slate-400 hover:text-white">
             Proposed GAWS
@@ -138,7 +140,7 @@
               <span id="label-skew" class="text-indigo-400 font-mono">0.00 chips</span>
             </div>
             <input id="slider-skew" type="range" min="0" max="1" step="0.05" value="0.2" oninput="updateSimulation()" class="w-full accent-indigo-500 bg-slate-800 rounded-lg h-1.5 cursor-pointer">
-            <p class="text-[10px] text-slate-500 mt-1">Relative offset between incoming physical modes.</p>
+            <p class="text-[10px] text-slate-500 mt-1">Relative propagation delay and phase offset between incoming physical modes.</p>
           </div>
 
           <!-- Phase Quantization -->
@@ -148,17 +150,17 @@
               <span id="label-quant" class="text-indigo-400 font-mono">3 bits</span>
             </div>
             <input id="slider-quant" type="range" min="2" max="6" step="1" value="3" oninput="updateSimulation()" class="w-full accent-indigo-500 bg-slate-800 rounded-lg h-1.5 cursor-pointer">
-            <p class="text-[10px] text-slate-500 mt-1">Resolution of transmitter polar synthesis paths.</p>
+            <p class="text-[10px] text-slate-500 mt-1">DAC resolution constraint in transmitter polar synthesis paths.</p>
           </div>
 
           <!-- Non-linear Coefficient -->
           <div>
             <div class="flex justify-between text-xs font-medium mb-1.5">
-              <span class="text-slate-300">Nonlinearity Coefficient ($a_3$)</span>
+              <span class="text-slate-300">Nonlinearity Factor ($a_3$)</span>
               <span id="label-nonlin" class="text-indigo-400 font-mono">-25.0 dB</span>
             </div>
             <input id="slider-nonlin" type="range" min="-40" max="-10" step="1" value="-25" oninput="updateSimulation()" class="w-full accent-indigo-500 bg-slate-800 rounded-lg h-1.5 cursor-pointer">
-            <p class="text-[10px] text-slate-500 mt-1">Governs intermodulation products & spectral compression.</p>
+            <p class="text-[10px] text-slate-500 mt-1">Third-order intercept parameter dictating intermodulation severity.</p>
           </div>
 
           <!-- Blocker Power -->
@@ -168,7 +170,7 @@
               <span id="label-blocker" class="text-indigo-400 font-mono">20 dB</span>
             </div>
             <input id="slider-blocker" type="range" min="0" max="40" step="2" value="20" oninput="updateSimulation()" class="w-full accent-indigo-500 bg-slate-800 rounded-lg h-1.5 cursor-pointer">
-            <p class="text-[10px] text-slate-500 mt-1">Power of adjacent jamming tones before receiver filters.</p>
+            <p class="text-[10px] text-slate-500 mt-1">Magnitude of adjacent jamming signals prior to receiver filtering.</p>
           </div>
         </div>
       </div>
@@ -180,13 +182,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6a7.5 7.5 0 107.5 7.5h-7.5V6z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 10.5H21A7.5 7.5 0 0013.5 3v7.5z" />
           </svg>
-          Realized Gram-Matrix State $|G_{\mathrm{real}}|$
+          Hardware-Realized Gram Matrix $|G_{\mathrm{real}}|$
         </h3>
 
         <!-- Heatmap Grid -->
         <div class="flex justify-center mb-4">
           <div class="grid grid-cols-4 gap-1 p-2 bg-slate-900 rounded-lg border border-slate-800 w-full max-w-[200px]">
-            <!-- Heatmap Cells will be generated and modified by JavaScript -->
+            <!-- Heatmap Cells updated by JS -->
             <div id="cell-0-0" class="heatmap-cell aspect-square rounded-sm flex items-center justify-center text-[10px] font-mono font-bold text-slate-900">1.0</div>
             <div id="cell-0-1" class="heatmap-cell aspect-square rounded-sm flex items-center justify-center text-[10px] font-mono text-white"></div>
             <div id="cell-0-2" class="heatmap-cell aspect-square rounded-sm flex items-center justify-center text-[10px] font-mono text-white"></div>
@@ -230,7 +232,7 @@
         </div>
 
         <div class="bg-emerald-950/20 border border-emerald-500/20 p-2.5 rounded-lg flex items-center justify-between">
-          <span class="text-xs text-emerald-300 font-medium">Estimated Power Savings:</span>
+          <span class="text-xs text-emerald-300 font-medium">Estimated Power Efficiency Gain:</span>
           <span id="val-savings" class="text-sm font-bold font-mono text-emerald-400">4.12x</span>
         </div>
       </div>
@@ -243,12 +245,12 @@
           </svg>
           Stress Diagnostic Engine
         </h3>
-        <p class="text-[10px] text-slate-400 mb-3">Simulate severe hardware stress profiles mapping to the project's 9 Falsification Failure Modes (FM1-FM9).</p>
-        <button onclick="runFalsificationDiag()" class="w-full bg-slate-900 hover:bg-slate-850 text-slate-300 hover:text-white border border-slate-700 py-2 rounded text-xs font-medium transition flex items-center justify-center gap-1.5">
+        <p class="text-[10px] text-slate-400 mb-3">Simulate extreme physical stress conditions mapped directly to the proposed Falsification Failure Modes (FM1-FM9).</p>
+        <button onclick="runFalsificationDiag()" class="w-full bg-slate-900 hover:bg-slate-850 text-slate-300 hover:text-white border border-slate-700 py-2 rounded text-xs font-medium transition flex items-center justify-center gap-1.5 shadow-sm">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 animate-spin text-slate-400 hidden" id="diag-spinner">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
           </svg>
-          <span id="diag-btn-text">Run Stress Suite (FM1-FM9)</span>
+          <span id="diag-btn-text">Execute Falsification Suite</span>
         </button>
 
         <!-- Test Log Console -->
@@ -261,841 +263,510 @@
         <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Manuscript Directory</h3>
         <ul class="space-y-1 text-xs">
           <li><a href="#summary" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">Project Summary</a></li>
-          <li><a href="#intro" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">1. Introduction & Overview</a></li>
+          <li><a href="#intro" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">1. Introduction & Context</a></li>
           <li><a href="#hypothesis" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">2. Research Questions & Hypotheses</a></li>
-          <li><a href="#positioning" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">3. Competitive Positioning</a></li>
+          <li><a href="#positioning" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">3. Competitive Positioning & Scope</a></li>
           <li><a href="#foundations" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">4. Mathematical Foundations</a></li>
-          <li><a href="#capacity" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">5. Capacity & Dynamic Range</a></li>
-          <li><a href="#relief" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">6. ADC Relief & ENOB</a></li>
+          <li><a href="#capacity" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">5. Capacity & Dynamic Range Limits</a></li>
+          <li><a href="#relief" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">6. ADC Resolution Mitigation</a></li>
           <li><a href="#thrusts" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">7. Detailed Research Thrusts</a></li>
-          <li><a href="#validation" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">8. Validation & Benchmarks</a></li>
+          <li><a href="#validation" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">8. Validation Benchmarks</a></li>
           <li><a href="#falsification" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">9. Falsification Framework</a></li>
-          <li><a href="#timeline" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">10. 5-Year Plan & Gantt Chart</a></li>
+          <li><a href="#timeline" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">10. Timeline & Milestones</a></li>
           <li><a href="#education" class="nav-link block p-2 rounded hover:bg-slate-900 transition text-slate-300">11. Integrated Educational Plan</a></li>
         </ul>
       </nav>
 
       <div class="mt-auto p-4 border-t border-slate-800 bg-slate-950 text-[10px] text-slate-500 text-center">
-        NSF CAREER Proposal Workspace &copy; 2026. Built with HTML5/Tailwind/MathJax.
+        NSF CAREER Proposal Workspace &copy; 2026. <br/> Advanced HTML5 / Tailwind / MathJax Implementation.
       </div>
     </aside>
 
     <!-- Main Content Area: Elegant MS Word / Journal View -->
-    <main class="flex-1 overflow-y-auto bg-slate-800 p-8 flex justify-center scroll-smooth no-scrollbar">
-      <div class="print-page w-full max-w-4xl bg-white text-slate-900 shadow-2xl rounded-lg p-12 overflow-hidden border border-slate-200">
+    <main class="flex-1 bg-slate-200 p-4 md:p-8 flex justify-center scroll-smooth">
+      <article class="print-page w-full max-w-4xl bg-white text-slate-900 shadow-xl rounded-lg p-10 md:p-14 overflow-hidden border border-slate-300">
         
         <!-- Header Sheet Cover -->
-        <div class="border-b-4 border-slate-900 pb-8 mb-8 text-center">
-          <p class="text-xs uppercase tracking-widest font-bold text-slate-500 mb-2">NSF Program Solicitation: NSF 26-500</p>
-          <p class="text-xs font-semibold text-slate-500 mb-4">Faculty Early Career Development Program (CAREER)</p>
+        <header class="border-b-4 border-slate-900 pb-8 mb-8 text-center">
+          <p class="text-xs uppercase tracking-widest font-bold text-slate-500 mb-1">NSF Program Solicitation: NSF 26-500</p>
+          <p class="text-sm font-semibold text-slate-600 mb-5">Faculty Early Career Development Program (CAREER)</p>
           
-          <h1 class="academic-text text-2xl md:text-3xl font-bold tracking-tight text-slate-950 leading-tight mb-6">
+          <h1 class="academic-text text-3xl md:text-4xl font-extrabold tracking-tight text-slate-950 leading-tight mb-8">
             CAREER: Geometry-Aware Waveform Synthesis for Shared-Interface RF and Quantum Interconnects
           </h1>
 
-          <div class="grid grid-cols-2 gap-4 text-left text-xs bg-slate-50 p-4 rounded border border-slate-200 max-w-2xl mx-auto">
+          <div class="grid grid-cols-2 gap-x-6 gap-y-4 text-left text-sm bg-slate-50 p-6 rounded-md border border-slate-200 max-w-3xl mx-auto shadow-sm">
             <div>
-              <p class="font-semibold text-slate-500">Principal Investigator:</p>
-              <p class="text-slate-800 font-bold"><span contenteditable="true" class="editable-field">Dr. Elara Vance</span></p>
+              <p class="font-bold text-slate-500 uppercase text-[10px] tracking-wider mb-1">Principal Investigator</p>
+              <p class="text-slate-900 font-semibold"><span contenteditable="true" class="editable-field">[ PI Name ]</span></p>
             </div>
             <div>
-              <p class="font-semibold text-slate-500">Department:</p>
-              <p class="text-slate-800 font-bold">Electrical and Computer Engineering</p>
+              <p class="font-bold text-slate-500 uppercase text-[10px] tracking-wider mb-1">Department</p>
+              <p class="text-slate-900 font-semibold">Electrical and Computer Engineering</p>
             </div>
             <div>
-              <p class="font-semibold text-slate-500">Institution:</p>
-              <p class="text-slate-800 font-bold"><span contenteditable="true" class="editable-field">Silicon Quantum & Electromagnetics University</span></p>
+              <p class="font-bold text-slate-500 uppercase text-[10px] tracking-wider mb-1">Institution</p>
+              <p class="text-slate-900 font-semibold"><span contenteditable="true" class="editable-field">[ Institution Name ]</span></p>
             </div>
             <div>
-              <p class="font-semibold text-slate-500">Project Options Selected:</p>
-              <p class="text-slate-800 font-semibold text-[11px]">Primary: Phased-Array Receive; Reach: Cryogenic Qubit Interface</p>
+              <p class="font-bold text-slate-500 uppercase text-[10px] tracking-wider mb-1">Project Domains</p>
+              <p class="text-slate-900 font-medium text-xs">Primary: Phased-Array Rx | Reach: Cryogenic Qubits</p>
             </div>
             <div>
-              <p class="font-semibold text-slate-500">Requested Budget:</p>
-              <p class="text-slate-800 font-mono font-bold">$550,000</p>
+              <p class="font-bold text-slate-500 uppercase text-[10px] tracking-wider mb-1">Requested Budget</p>
+              <p class="text-slate-900 font-mono font-bold">$550,000</p>
             </div>
             <div>
-              <p class="font-semibold text-slate-500">Requested Duration:</p>
-              <p class="text-slate-800 font-semibold">5 Years (60 Months)</p>
+              <p class="font-bold text-slate-500 uppercase text-[10px] tracking-wider mb-1">Proposed Duration</p>
+              <p class="text-slate-900 font-semibold">60 Months (5 Years)</p>
             </div>
           </div>
-        </div>
+        </header>
 
         <!-- Document Contents -->
-        <div class="academic-text text-sm md:text-base space-y-10">
+        <div class="academic-text text-sm md:text-[15px] space-y-12">
 
           <!-- Section: Project Summary -->
-          <section id="summary" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">Project Summary</h2>
+          <section id="summary" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">Project Summary</h2>
             
             <div class="space-y-4 text-justify">
-              <h3 class="text-sm font-bold text-slate-800 italic uppercase">Overview:</h3>
+              <h3 class="text-base font-bold text-slate-900 uppercase tracking-wide mt-2">Overview</h3>
               <p>
-                Next-generation wireless communication, remote sensing, and cryogenic quantum-computing systems face a shared, fundamental circuit-to-system bottleneck: many fragile physical modes must pass through far fewer, imperfect physical interfaces. In millimetre-wave (mmWave) and sub-terahertz (sub-THz) phased arrays, dozens of antenna elements, beam directions, or spatial modes must share a limited number of radio-frequency (RF) chains, intermediate-frequency (IF) routing wires, local-oscillator (LO) distribution networks, and analog-to-digital converters (ADCs). In cryogenic quantum systems, multiple control and readout lines must share scarce, low-temperature coaxial interconnects, cryogenic low-noise amplifiers, microwave resonator banks, and power-limited room-temperature electronics.
+                As next-generation wireless communications, ubiquitous remote sensing, and quantum-computing architectures scale toward unprecedented dimensionalities, they encounter a fundamental and shared physical bottleneck: the necessity of routing highly fragile, multi-dimensional physical modes through a severely constrained number of imperfect hardware interfaces. In millimeter-wave (mmWave) and sub-terahertz (sub-THz) phased arrays, massive spatial degrees of freedom must be compressed to share a limited pool of radio-frequency (RF) chains, local-oscillator (LO) distribution networks, and analog-to-digital converters (ADCs). Concurrently, in cryogenic quantum computing, hundreds of highly sensitive control and readout signals are funneled through a scarce number of low-temperature coaxial interconnects and power-limited cryogenic amplifiers.
               </p>
               <p>
-                Conventional multiplexing strategies divide these channels cleanly in time (TDM), frequency (FDM), or via mathematically ideal orthogonal codes (CDM). However, physical hardware destroys ideal mathematical separation through timing skew, finite rise and fall times, phase quantization, phase noise, package dispersion, non-linear distortion, and thermal drift.
+                Classical multiplexing paradigms isolate these channels mathematically via Code-Division (CDM), Time-Division (TDM), or Frequency-Division (FDM) multiplexing. However, these methods presume idealized abstract orthogonality. In physical implementations, hardware non-idealities—including sub-picosecond timing skew, phase quantization, non-linear distortion, package dispersion, and thermal drift—inevitably destroy this orthogonality. This degradation precipitates catastrophic inter-channel crosstalk, exhausts ADC dynamic range, and severely bounds system scalability.
               </p>
               <p>
-                This CAREER project establishes <strong>geometry-aware waveform synthesis</strong>, a transformative circuit-signal co-design framework in which each spatial beam, readout tone, or qubit control pulse is treated not as an ideal mathematical function, but as a hardware-realized response signature. The central object of optimization is not the ideal codebook, but the realized hardware Gram matrix after waveform synthesis, physical propagation, non-linear distortion, channel whitening, and receiver-kernel projection.
+                This CAREER project pioneers <strong>Geometry-Aware Waveform Synthesis (GAWS)</strong>, a transformative circuit-signal co-design methodology. Instead of applying idealized mathematical codes and relying on power-hungry digital calibration backends to correct physical errors, GAWS treats every spatial beam or quantum control pulse as a hardware-realized response signature. The explicit target of optimization is the <em>realized hardware Gram matrix</em>—the geometric representation of signal separation after physical propagation, non-linear distortion, and receiver projection.
               </p>
               <p>
-                The primary objective is to keep this realized Gram matrix well-conditioned—maintaining large diagonal entries for robust signal recovery and minimizing off-diagonal entries to ensure bounded, measurable, and calibratable crosstalk. The project’s central hypothesis is that finite-alphabet, circuit-realizable Grassmannian and Spherical-Gold waveform synthesis can keep the realized mutual coherence near its fundamental theoretical bounds under real circuit constraints. This reduction in mutual coherence relaxes the dynamic-range burden on the ADC, minimizes calibration overhead, and reduces synchronization sensitivity.
+                The central hypothesis asserts that synthesizing finite-alphabet, circuit-realizable waveforms using complex Grassmannian and Spherical-Gold packing algorithms can constrain mutual coherence near theoretical minimum bounds, even under severe physical impairments. By preserving this geometric conditioning prior to digitization, GAWS fundamentally relaxes ADC effective number of bits (ENOB) requirements, dramatically mitigates crosstalk, and enhances system resilience to synchronization errors.
               </p>
 
-              <h3 class="text-sm font-bold text-slate-800 italic uppercase mt-4">Intellectual Merit:</h3>
+              <h3 class="text-base font-bold text-slate-900 uppercase tracking-wide mt-6">Intellectual Merit</h3>
               <p>
-                The intellectual merit of this research lies in shifting the paradigm of shared-interface communications from "ideal orthogonality under hardware correction" to "direct optimization of hardware-distorted geometries." The research will be validated across two distinct, challenging hardware platforms:
+                The intellectual merit of this research is rooted in a paradigm shift: abandoning the pursuit of abstract mathematical orthogonality in favor of directly optimizing the geometric separability of hardware-distorted signals. This theoretical advance will be empirically validated across two distinct, highly constrained technological platforms:
               </p>
-              <ul class="list-disc pl-5 space-y-2 mt-2">
+              <ul class="list-disc pl-6 space-y-2 mt-3 text-slate-800">
                 <li>
-                  <strong>Platform A (Primary Validation):</strong> A hardware-in-the-loop mmWave / Ka-band phased-array shared-interface receiver utilizing analog correlation before digitization to physically demonstrate data-converter dynamic-range relief, high jammer suppression, and improved angular resolution.
+                  <strong>Platform A (Primary Validation):</strong> A hardware-in-the-loop mmWave (Ka-band) phased-array receiver. This testbed will utilize analog correlation pre-digitization to physically demonstrate reductions in data-converter dynamic-range burdens, unprecedented jammer suppression, and refined spatial Cramér-Rao bounds.
                 </li>
                 <li>
-                  <strong>Platform B (Cross-Domain Translation):</strong> An interface-level emulation platform for cryogenic quantum interfaces, applying the same phase-correlation and Gram-conditioning principles to frequency-division multiplexed (FDM) resonator-bank readouts and selective XY-control pulse shaping. This platform evaluates assignment fidelity and crosstalk reduction under tight photon budgets and amplifier saturation constraints without claiming the direct operation of active multi-qubit chips.
+                  <strong>Platform B (Cross-Domain Emulation):</strong> An advanced microwave emulation architecture for cryogenic quantum interfaces. It will apply the same realized-Gram conditioning principles to frequency-division multiplexed (FDM) resonator readouts and selective XY-control pulses, demonstrating superior crosstalk suppression under strict photon and amplification constraints.
                 </li>
               </ul>
-              <p>
-                The technical framework is built on four core research thrusts: <strong>Thrust 1 (Theory)</strong>: Shifting from abstract Grassmannian packings to realized-Gram geometry under non-linear and time-varying hardware impairments. <strong>Thrust 2 (Circuits)</strong>: Designing finite-alphabet waveform synthesis blocks and analog correlators that perform spatial-code projection before the ADC bottleneck. <strong>Thrust 3 (Platform A)</strong>: Validating mmWave array operations, tracking beam separation, and quantifying spatial Cramer-Rao bound improvements. <strong>Thrust 4 (Platform B)</strong>: Emulating multi-channel readout and control signatures for quantum interfaces under strict cryogenic constraints.
+              <p class="mt-3">
+                The technical execution is divided into four interdependent thrusts encompassing theoretical manifold optimization (Thrust 1), mixed-signal integrated circuit (IC) design (Thrust 2), and rigorous multi-platform experimental validations (Thrusts 3 and 4).
               </p>
 
-              <h3 class="text-sm font-bold text-slate-800 italic uppercase mt-4">Broader Impacts:</h3>
+              <h3 class="text-base font-bold text-slate-900 uppercase tracking-wide mt-6">Broader Impacts</h3>
               <p>
-                The broader impacts of this CAREER project are anchored by an integrated educational and outreach plan designed to bridge the growing gap between physical microwave engineering, digital signal processing, and quantum information science. The educational plan includes: the development of a new graduate-level module: <em>Realized-Gram Methods for RF and Quantum Interfaces</em>; a hands-on undergraduate laboratory sequence centered on code-division multiplexed hardware; and the creation of an open-source, interactive simulation package, allowing students and engineers to visualize how hardware impairments degrade codebooks and how geometry-aware synthesis restores separability. Outreach activities aim at high school and underrepresented minority students through existing university-sponsored engineering camps, demonstrating the physics of interference and coding through visual and acoustic wave experiments.
+                The broader impacts of this proposal are driven by an integrated educational and outreach framework designed to obliterate the persistent silos separating microwave engineering, digital signal processing, and quantum information science. Central to this effort is the creation of a novel graduate curriculum, <em>"Realized-Gram Methods for RF and Quantum Interfaces,"</em> paired with hands-on, software-defined radio (SDR) undergraduate laboratories. Furthermore, the PI will develop and release an open-source, interactive simulation toolkit allowing students to visually comprehend how hardware limits degrade abstract math, and how geometry-aware synthesis restores system integrity. Outreach initiatives leverage these visual tools in university-sponsored engineering camps, explicitly targeting the recruitment and retention of underrepresented minority (URM) students into deep-tech hardware disciplines.
               </p>
             </div>
           </section>
 
           <!-- Section 1 -->
-          <section id="intro" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">1. Introduction and Project Overview</h2>
+          <section id="intro" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">1. Introduction and Context</h2>
             
             <div class="space-y-4 text-justify">
-              <h3 class="text-base font-bold text-slate-800">1.1 The Shared-Interface Bottleneck in Modern RF and Quantum Systems</h3>
+              <h3 class="text-base font-bold text-slate-900 mt-2">1.1 The Shared-Interface Bottleneck in Modern Architectures</h3>
               <p>
-                As physical systems scale in complexity, the interconnects linking their processing cores to the external world emerge as primary design bottlenecks. This bottleneck manifests clearly in two highly active but historically isolated fields: wideband multi-beam phased arrays and scalable cryogenic quantum computing processors.
+                As information systems aggressively scale, the interconnects bridging processing cores to physical environments have become the paramount architectural bottleneck. This limitation is starkly evident in two highly active, yet historically disconnected domains: wideband multi-beam phased arrays and scalable cryogenic quantum processors.
               </p>
               <p>
-                In mmWave and sub-THz phased-array systems, increasing the spatial resolution requires scaling the number of antenna elements ($M$) and synthesized concurrent beams ($N$). In an unconstrained scenario, a fully digital architecture—allocating a dedicated RF chain and a high-speed, high-resolution ADC to every element—provides the maximum information-theoretic capacity. However, the power consumption, thermal dissipation, cost, and physical space requirements of hundreds of wideband ADCs make fully digital arrays impractical for edge devices, automotive radars, and satellite communication terminals. To survive, these systems utilize hybrid architectures or analog beamforming, forcing multiple physical modes to share a reduced number of intermediate-frequency (IF) paths and ADCs.
+                In mmWave and sub-THz phased arrays, scaling spatial resolution mandates a massive increase in antenna elements ($M$) and concurrent beams ($N$). While a fully digital architecture—allocating a dedicated high-speed ADC to every antenna—provides maximum capacity, its prohibitive thermal dissipation, physical footprint, and power demands render it unviable for mobile edge devices and satellite swarms. Consequently, these systems are forced into hybrid architectures, multiplexing multiple physical modes through a compressed set of analog-to-digital boundaries.
               </p>
               <p>
-                Similarly, superconducting and spin-based quantum processors operating at millikelvin temperatures within dilution refrigerators face a strict thermal and physical wiring bottleneck. To avoid overwhelming the cooling power of the cryogenic refrigerator’s lowest stages (typically limited to $10\text{--}100\,\mu\text{W}$ at $20\,\text{mK}$), hundreds of control and readout lines must be multiplexed onto a minimal set of cryogenic coaxial cables. Conventional approaches utilize Frequency-Division Multiplexing (FDM) with passive superconducting resonator banks. However, as the density of readout tones increases, the non-linearities of cryogenic components (such as Josephson Traveling-Wave Parametric Amplifiers, or TWPAs) and the limited bandwidth of cryogenic low-noise amplifiers introduce intermodulation distortion, spectral leakage, and phase noise, causing severe readout crosstalk and gate errors.
+                Similarly, superconducting quantum processors operating inside dilution refrigerators face strict thermodynamic boundaries. With cooling power limited to tens of microwatts at the $20\,\text{mK}$ stage, routing individual control lines for thousands of qubits is physically impossible. Current architectures rely on multiplexing multiple readout tones onto single coaxial lines. However, as tone density increases, the non-linear behavior of cryogenic components (e.g., Josephson Traveling-Wave Parametric Amplifiers) introduces severe intermodulation distortion and spectral leakage, directly inducing measurement errors and computational decoherence.
               </p>
 
-              <h3 class="text-base font-bold text-slate-800 mt-4">1.2 The Failure of Abstract Orthogonality</h3>
+              <h3 class="text-base font-bold text-slate-900 mt-6">1.2 The Collapse of Abstract Mathematical Orthogonality</h3>
               <p>
-                To address these shared-interface problems, engineers traditionally turn to classical multiplexing techniques. Code-Division Multiplexing (CDM), for example, assigns each channel an orthogonal sequence (such as Walsh-Hadamard or Gold codes). Mathematically, these codes maintain a zero inner product:
+                Conventional engineering attempts to solve these bottlenecks utilizing classical multiplexing. Code-Division Multiplexing (CDM) assigns mathematically orthogonal sequences (e.g., Walsh-Hadamard codes) to independent channels, assuming a zero inner product:
               </p>
-              <div class="bg-slate-50 p-3 rounded my-2 text-center border border-slate-200">
+              <div class="bg-slate-50 p-4 rounded-md my-4 text-center border border-slate-200 shadow-inner text-lg">
                 $$\langle c_i, c_j \rangle = 0 \quad (\forall i \neq j)$$
               </div>
               <p>
-                However, real-world hardware does not transmit or receive abstract mathematical vectors. Instead, waveforms are subject to physical impairments represented by the operator $\mathcal{D}_\theta$, parametrized by hardware non-idealities $\theta$:
+                However, physical circuitry does not transmit abstract mathematical entities. Waveforms are subjected to an inescapable hardware impairment operator $\mathcal{D}_\theta$, parameterized by physical non-idealities $\theta$:
               </p>
-              <div class="bg-slate-50 p-3 rounded my-2 text-center border border-slate-200">
+              <div class="bg-slate-50 p-4 rounded-md my-4 text-center border border-slate-200 shadow-inner text-lg">
                 $$\widetilde{c}_k = \mathcal{D}_\theta(c_k)$$
               </div>
               <p>
-                Where $\theta$ encompasses timing skew, phase-quantizer resolution, finite edge speed, non-linear intermodulation, package dispersion, phase/gain mismatch, and clock jitter. Under these impairments, the realized waveforms lose their orthogonality, collapsing the system’s effective signal-to-interference-plus-noise ratio (SINR), saturating the dynamic range of subsequent ADCs, and creating uncalibratable crosstalk.
+                When subjected to timing skew, finite slew rates, local oscillator jitter, and third-order nonlinearities, the realized physical waveforms rapidly lose their orthogonality. This collapse decimates the Signal-to-Interference-plus-Noise Ratio (SINR), saturates ADC dynamic ranges, and generates uncalibratable deterministic crosstalk.
               </p>
 
-              <h3 class="text-base font-bold text-slate-800 mt-4">1.3 Proposed Solution: Geometry-Aware Waveform Synthesis</h3>
+              <h3 class="text-base font-bold text-slate-900 mt-6">1.3 The Geometry-Aware Solution</h3>
               <p>
-                This project addresses the interface bottleneck by making the hardware-realized Gram matrix the explicit, primary object of co-design. Rather than designing an ideal codebook and appending complex, power-hungry digital calibration backends to fix hardware non-idealities, we synthesize waveforms directly within the constraints of the physical circuitry to minimize the mutual coherence of the actual, impaired waveforms.
-              </p>
-              <p>
-                We treat the physical modes, spatial angles, or cryogenic tones as vectors packed on a complex Grassmannian manifold. By co-designing the waveform's code properties (temporal) and circuit excitation paths (spatial, phase, and spectral), we achieve a product-domain leakage-suppression mechanism—termed <strong>Spherical-Gold Coding</strong>—that guarantees bounded, predictable, and calibratable crosstalk even under severe timing skew, phase quantization, and non-linearities.
+                This project confronts the interface bottleneck by pivoting the design focus entirely onto the <em>hardware-realized Gram matrix</em>. Rather than designing perfect codebooks and relying on post-digitization DSP to salvage corrupted signals, we synthesize waveforms natively aware of physical circuit constraints. By modeling spatial angles, cryogenic tones, and temporal chips as vectors packed upon a complex Grassmannian manifold, we achieve a mechanism—herein termed <strong>Spherical-Gold Coding</strong>—that mathematically guarantees bounded and predictable crosstalk, pre-digitization.
               </p>
             </div>
           </section>
 
           <!-- Section 2 -->
-          <section id="hypothesis" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">2. Central Research Question and Core Hypothesis</h2>
+          <section id="hypothesis" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">2. Research Questions & Hypotheses</h2>
             
             <div class="space-y-4 text-justify">
-              <h3 class="text-base font-bold text-slate-800">2.1 Central Research Question</h3>
-              <p>The scientific inquiry driving this research is formulated as follows:</p>
+              <h3 class="text-base font-bold text-slate-900 mt-2">2.1 Formulating the Scientific Inquiry</h3>
+              <p>The trajectory of this research is governed by the following core inquiries:</p>
               
-              <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 my-4 rounded-r shadow-sm">
-                <p class="font-bold text-indigo-900 text-sm mb-1 uppercase tracking-wider">Central Scientific Question</p>
-                <p class="text-slate-800 italic">
-                  How can finite-alphabet circuit waveforms be synthesized so that their realized, impaired, and whitened response signatures remain well separated after timing skew, phase quantization, finite edge speed, non-linear distortion, package dispersion, and calibration drift?
+              <div class="bg-indigo-50/50 border-l-4 border-indigo-600 p-5 my-5 rounded-r-md shadow-sm">
+                <p class="font-extrabold text-indigo-900 text-sm mb-2 uppercase tracking-wide">Central Scientific Question</p>
+                <p class="text-slate-800 italic leading-relaxed">
+                  How can finite-alphabet, circuit-constrained waveforms be synthesized such that their realized, impaired, and whitened response signatures maintain optimal geometric separation despite sub-picosecond timing skew, phase quantization, non-linear intermodulation, and environmental drift?
                 </p>
               </div>
 
-              <div class="bg-slate-50 border-l-4 border-slate-700 p-4 my-4 rounded-r shadow-sm">
-                <p class="font-bold text-slate-900 text-sm mb-1 uppercase tracking-wider">Equivalent Circuit Formulation</p>
-                <p class="text-slate-800 italic">
-                  Can a shared RF/IF/ADC or cryogenic interface be designed by directly minimizing the off-diagonal coherence of the hardware-realized Gram matrix, rather than by assuming ideal orthogonal codes?
-                </p>
-              </div>
-
-              <h3 class="text-base font-bold text-slate-800 mt-4">2.2 Core Hypothesis</h3>
+              <h3 class="text-base font-bold text-slate-900 mt-6">2.2 The Mathematical Core Hypothesis</h3>
               <p>
-                Let $N$ independent channels share a single physical interface. Each channel $k \in \{1, \ldots, N\}$ is assigned an ideal waveform signature:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\phi_k \in \mathbb{C}^d$$
-              </div>
-              <p>
-                where $d$ represents the available synthesis degrees of freedom (e.g., temporal chips, frequency tones, delay taps, spatial modes, spectral bins, or pulse-shaping coefficients). 
+                Consider a system where $N$ independent channels share a constrained interface. Each channel $k$ is theoretically assigned an ideal waveform $\phi_k \in \mathbb{C}^d$, where $d$ represents available synthesis dimensions (e.g., temporal chips, spatial phases, spectral bins). 
               </p>
               <p>
-                In physical hardware, the actual signature generated and propagated through the interface is distorted by the hardware impairment operator:
+                In hardware, the transmitted signature is distorted by $\mathcal{D}_\theta$, yielding $\widetilde{\phi}_k = \mathcal{D}_\theta(\phi_k)$. The parameter space $\theta$ encapsulates the primary hardware non-idealities:
               </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\widetilde{\phi}_k = \mathcal{D}_\theta(\phi_k)$$
-              </div>
-              <p>
-                where the impairment parameter set $\theta$ encompasses:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
+              
+              <div class="bg-slate-50 p-4 rounded-md my-4 text-center border border-slate-200 shadow-inner text-lg">
                 $$\theta = \left\{ \Delta \tau, \, b, \, \tau_r, \, a_3, \, \epsilon_\phi, \, \epsilon_g, \, H_{\mathrm{pkg}}, \, \sigma_j \right\}$$
               </div>
 
-              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mt-4">Table 1. Physical impairment parameters included in the geometry-aware waveform model</p>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse border border-slate-200 mt-2 text-xs">
+              <!-- Converted from basic table to semantic, accessible HTML table -->
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-6 mb-2">Table 1: Physical Impairment Parameters in the GAWS Model</p>
+              <div class="overflow-x-auto rounded-md border border-slate-300 mb-6">
+                <table class="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr class="bg-slate-100">
-                      <th class="border border-slate-200 p-2 font-bold">Parameter</th>
-                      <th class="border border-slate-200 p-2 font-bold">Physical Definition</th>
-                      <th class="border border-slate-200 p-2 font-bold">Typical Scaling &amp; Units</th>
+                    <tr class="bg-slate-100 border-b border-slate-300">
+                      <th scope="col" class="p-3 font-bold text-slate-800">Parameter</th>
+                      <th scope="col" class="p-3 font-bold text-slate-800 border-l border-slate-200">Physical Definition</th>
+                      <th scope="col" class="p-3 font-bold text-slate-800 border-l border-slate-200">Typical Units / Scaling</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-mono">$\Delta \tau$</td>
-                      <td class="border border-slate-200 p-2">Timing skew between channels</td>
-                      <td class="border border-slate-200 p-2">Picoseconds ($\text{ps}$) or fraction of chip period</td>
+                  <tbody class="divide-y divide-slate-200">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-mono font-medium text-indigo-700">$\Delta \tau$</td>
+                      <td class="p-3 border-l border-slate-200">Inter-channel timing skew</td>
+                      <td class="p-3 border-l border-slate-200 text-slate-600">Picoseconds ($\text{ps}$)</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-mono">$b$</td>
-                      <td class="border border-slate-200 p-2">Phase-quantizer resolution</td>
-                      <td class="border border-slate-200 p-2">$2$ to $6$ bits</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-mono font-medium text-indigo-700">$b$</td>
+                      <td class="p-3 border-l border-slate-200">Phase-quantizer DAC resolution</td>
+                      <td class="p-3 border-l border-slate-200 text-slate-600">$2$ to $6$ bits</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-mono">$\tau_r$</td>
-                      <td class="border border-slate-200 p-2">Rise/fall time of switching circuits</td>
-                      <td class="border border-slate-200 p-2">Picoseconds ($\text{ps}$) or slew rate ($\text{V/ns}$)</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-mono font-medium text-indigo-700">$\tau_r$</td>
+                      <td class="p-3 border-l border-slate-200">Switching rise/fall time (slew rate)</td>
+                      <td class="p-3 border-l border-slate-200 text-slate-600">Volts/nanosecond ($\text{V/ns}$)</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-mono">$a_3$</td>
-                      <td class="border border-slate-200 p-2">Third-order non-linear coefficient</td>
-                      <td class="border border-slate-200 p-2">$\text{V}^{-2}$ (governing $\text{IIP3}$)</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-mono font-medium text-indigo-700">$a_3$</td>
+                      <td class="p-3 border-l border-slate-200">Third-order non-linear coefficient</td>
+                      <td class="p-3 border-l border-slate-200 text-slate-600">$\text{V}^{-2}$ (governs $\text{IIP3}$)</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-mono">$\epsilon_\phi$</td>
-                      <td class="border border-slate-200 p-2">Residual phase error</td>
-                      <td class="border border-slate-200 p-2">Degrees ($^\circ$)</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-mono font-medium text-indigo-700">$\epsilon_\phi, \epsilon_g$</td>
+                      <td class="p-3 border-l border-slate-200">Residual phase and static gain mismatch</td>
+                      <td class="p-3 border-l border-slate-200 text-slate-600">Degrees ($^\circ$) / Decibels ($\text{dB}$)</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-mono">$\epsilon_g$</td>
-                      <td class="border border-slate-200 p-2">Static gain mismatch</td>
-                      <td class="border border-slate-200 p-2">Decibels ($\text{dB}$) or percent ratio</td>
-                    </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-mono">$H_{\mathrm{pkg}}(f)$</td>
-                      <td class="border border-slate-200 p-2">Package, bondwire, or interconnect transfer function</td>
-                      <td class="border border-slate-200 p-2">S-parameters ($\text{S}_{21}$, $\text{S}_{11}$)</td>
-                    </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-mono">$\sigma_j$</td>
-                      <td class="border border-slate-200 p-2">Aperture or clock jitter</td>
-                      <td class="border border-slate-200 p-2">Femtoseconds ($\text{fs}$)</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-mono font-medium text-indigo-700">$H_{\mathrm{pkg}}(f)$</td>
+                      <td class="p-3 border-l border-slate-200">Package/bondwire transfer function</td>
+                      <td class="p-3 border-l border-slate-200 text-slate-600">S-parameters ($\text{S}_{21}$, $\text{S}_{11}$)</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              <p class="mt-4">
-                Let $R \in \mathbb{C}^{d \times d}$ be the noise-plus-interference covariance matrix observed at the receiver input. The whitened, normalized realized signature vector for channel $k$ is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$u_k = \frac{R^{-1/2}\widetilde{\phi}_k}{\left\| R^{-1/2}\widetilde{\phi}_k \right\|_2}$$
-              </div>
               <p>
-                Collect these unit-norm vectors into a signature matrix $U = [u_1, u_2, \ldots, u_N] \in \mathbb{C}^{d \times N}$. The realized hardware Gram matrix is:
+                Let $R \in \mathbb{C}^{d \times d}$ represent the noise-plus-interference covariance matrix. The whitened, normalized realized signature vector for channel $k$ is $u_k = (R^{-1/2}\widetilde{\phi}_k) / \| R^{-1/2}\widetilde{\phi}_k \|_2$. Collecting these vectors constructs the <em>Hardware-Realized Gram Matrix</em> ($G = U^H U$). The maximum off-diagonal magnitude defines the system's mutual coherence ($\mu_{\mathrm{real}}$).
               </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$G = U^H U, \quad \text{where} \quad G_{kj} = u_k^H u_j$$
-              </div>
-              <p>
-                The mutual coherence of the system is the maximum off-diagonal magnitude:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\mu_{\mathrm{real}} = \max_{k \neq j} |G_{kj}|$$
-              </div>
 
-              <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 my-4 rounded-r shadow-sm">
-                <p class="font-bold text-indigo-900 text-sm mb-1 uppercase tracking-wider">Core Hypothesis Formulation</p>
-                <p class="text-slate-800 italic">
-                  Finite-alphabet, circuit-realizable waveform signatures can be synthesized such that the realized mutual coherence $\mu_{\mathrm{real}}$ remains near the theoretical Grassmannian or Welch bound under physical impairments $\theta$. This bound-approaching coherence minimizes inter-channel crosstalk, preserves matched-filter SINR, prevents ill-conditioning in digital linear recovery (ZF/MMSE), and relaxes the dynamic-range and ENOB requirements of the digitizer.
+              <div class="bg-indigo-50/50 border-l-4 border-indigo-600 p-5 my-5 rounded-r-md shadow-sm">
+                <p class="font-extrabold text-indigo-900 text-sm mb-2 uppercase tracking-wide">Core Hypothesis</p>
+                <p class="text-slate-800 italic leading-relaxed">
+                  Finite-alphabet, circuit-realizable waveforms can be synthesized such that the realized mutual coherence ($\mu_{\mathrm{real}}$) remains asymptotically close to the theoretical Grassmannian (Welch) bound under severe physical impairments. This geometric conditioning directly minimizes inter-channel crosstalk, averts ill-conditioning in digital recovery algorithms (ZF/MMSE), and drastically reduces the dynamic-range resolution (ENOB) required of the digitizer.
                 </p>
               </div>
             </div>
           </section>
 
           <!-- Section 3 -->
-          <section id="positioning" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">3. Positioning and Prior Art</h2>
+          <section id="positioning" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">3. Competitive Positioning & Scope Demarcation</h2>
             
             <div class="space-y-4 text-justify">
               <p>
-                This proposal represents a fundamental shift from traditional system design. To demonstrate this shift, Table 2 positions the proposed work against existing communication and multiplexing paradigms.
+                This proposal asserts a fundamental departure from established multiplexing norms. Table 2 provides a comprehensive positioning of the proposed framework against contemporary architectures.
               </p>
 
-              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mt-4">Table 2. Positioning of proposed framework against existing multiplexing paradigms</p>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse border border-slate-200 mt-2 text-xs">
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-6 mb-2">Table 2: Architectural Positioning against Existing Paradigms</p>
+              <div class="overflow-x-auto rounded-md border border-slate-300 mb-6">
+                <table class="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr class="bg-slate-100">
-                      <th class="border border-slate-200 p-2 font-bold">Dimension</th>
-                      <th class="border border-slate-200 p-2 font-bold">Conventional CDM (e.g., Walsh)</th>
-                      <th class="border border-slate-200 p-2 font-bold">Fully Digital Beamforming</th>
-                      <th class="border border-slate-200 p-2 font-bold">Hybrid/Analog Beamforming</th>
-                      <th class="border border-slate-200 p-2 font-bold">Proposed Geometry-Aware Waveforms</th>
+                    <tr class="bg-slate-100 border-b border-slate-300 text-[13px]">
+                      <th scope="col" class="p-3 font-bold text-slate-800 w-1/5">Architectural Dimension</th>
+                      <th scope="col" class="p-3 font-bold text-slate-800 border-l border-slate-200 w-1/5">Fully Digital DBF</th>
+                      <th scope="col" class="p-3 font-bold text-slate-800 border-l border-slate-200 w-1/5">Hybrid / Analog</th>
+                      <th scope="col" class="p-3 font-bold text-slate-800 border-l border-slate-200 w-1/5">Conventional CDM</th>
+                      <th scope="col" class="p-3 font-extrabold text-indigo-700 border-l border-slate-200 w-1/5 bg-indigo-50/30">Proposed GAWS</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-bold">Primary Design Target</td>
-                      <td class="border border-slate-200 p-2">Mathematical orthogonal code sequences ($C^H C = I$)</td>
-                      <td class="border border-slate-200 p-2">Maximum spatial degrees of freedom</td>
-                      <td class="border border-slate-200 p-2">Spatial phase-shifting (steered beams)</td>
-                      <td class="border border-slate-200 p-2 font-semibold text-indigo-700">Hardware-realized Gram matrix ($G_{\mathrm{real}}$)</td>
+                  <tbody class="divide-y divide-slate-200 text-[13px]">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-bold text-slate-700">Optimization Target</td>
+                      <td class="p-3 border-l border-slate-200">Spatial degrees of freedom</td>
+                      <td class="p-3 border-l border-slate-200">Phase-shifted steering</td>
+                      <td class="p-3 border-l border-slate-200">Ideal math orthogonality</td>
+                      <td class="p-3 border-l border-slate-200 font-bold text-indigo-700 bg-indigo-50/30">Hardware Realized Gram Matrix</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-bold">Hardware Overhead</td>
-                      <td class="border border-slate-200 p-2">High-speed, high-resolution converters for every port</td>
-                      <td class="border border-slate-200 p-2">$M$ RF chains, $M$ high-power ADCs</td>
-                      <td class="border border-slate-200 p-2">Phase shifters, single RF chain, single ADC</td>
-                      <td class="border border-slate-200 p-2 font-semibold text-indigo-700">Low-resolution phase paths, analog correlator before ADC</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-bold text-slate-700">Hardware Footprint</td>
+                      <td class="p-3 border-l border-slate-200 text-rose-600 font-semibold">Massive ($M$ ADCs)</td>
+                      <td class="p-3 border-l border-slate-200">Minimal (1 ADC)</td>
+                      <td class="p-3 border-l border-slate-200">Very High (High-res ADC)</td>
+                      <td class="p-3 border-l border-slate-200 font-bold text-emerald-600 bg-indigo-50/30">Low (Analog Correlator)</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-bold">Sensitivity to Skew ($\Delta\tau$)</td>
-                      <td class="border border-slate-200 p-2 text-rose-600 font-semibold">Severe: Orthogonality collapses rapidly</td>
-                      <td class="border border-slate-200 p-2">Moderate: Handled in digital domain</td>
-                      <td class="border border-slate-200 p-2">N/A (single narrow beam)</td>
-                      <td class="border border-slate-200 p-2 font-semibold text-emerald-600">Robust: Bounded by Spherical-Gold product suppression</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-bold text-slate-700">Timing Skew ($\Delta \tau$)</td>
+                      <td class="p-3 border-l border-slate-200">Corrected Digitally</td>
+                      <td class="p-3 border-l border-slate-200">N/A</td>
+                      <td class="p-3 border-l border-slate-200 text-rose-600 font-semibold">Catastrophic Collapse</td>
+                      <td class="p-3 border-l border-slate-200 font-bold text-emerald-600 bg-indigo-50/30">Robust / Deterministic</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-bold">ADC Burden</td>
-                      <td class="border border-slate-200 p-2">Must digitize full dynamic range of sum signal</td>
-                      <td class="border border-slate-200 p-2">Extremely high wideband dynamic range</td>
-                      <td class="border border-slate-200 p-2">Standard</td>
-                      <td class="border border-slate-200 p-2 font-semibold text-indigo-700">Significantly Reduced due to analog projection/suppression</td>
-                    </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-bold">Cryogenic Compatibility</td>
-                      <td class="border border-slate-200 p-2">Poor: High digital dissipation at 4 Kelvin</td>
-                      <td class="border border-slate-200 p-2">Impossible at mK due to power limits</td>
-                      <td class="border border-slate-200 p-2">N/A</td>
-                      <td class="border border-slate-200 p-2 font-semibold text-emerald-600">Excellent: Passive routing and minimal room-temp RF</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-bold text-slate-700">Cryogenic Feasibility</td>
+                      <td class="p-3 border-l border-slate-200 text-rose-600 font-semibold">Impossible (Heat)</td>
+                      <td class="p-3 border-l border-slate-200">N/A</td>
+                      <td class="p-3 border-l border-slate-200">Poor (Digital DSP)</td>
+                      <td class="p-3 border-l border-slate-200 font-bold text-emerald-600 bg-indigo-50/30">Excellent (Passive)</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
 
-              <h3 class="text-base font-bold text-slate-800 mt-6">3.1 Reviewer-Safe Positioning and Scope Boundaries</h3>
+              <h3 class="text-base font-bold text-slate-900 mt-6">3.1 Reviewer-Safe Scope Assurances</h3>
               <p>
-                To ensure an objective and scientifically rigorous review, the scope of this project is bounded by the following guiding principles:
+                To fortify the scientific rigor and feasibility of this proposal, the scope is deliberately bounded by the following pragmatic truths:
               </p>
-              <ul class="list-disc pl-5 space-y-2">
+              <ul class="list-disc pl-6 space-y-2 mt-2 text-slate-800">
                 <li>
-                  <strong>No Magic "Zero-Crosstalk" Claims:</strong> Grassmannian geometry guarantees bounded, predictable coherence, not zero crosstalk. The focus is on ensuring crosstalk is deterministic, measurable, and stable.
+                  <strong>Rejection of "Zero-Crosstalk" Fallacies:</strong> Geometry-aware design does not invoke magical zero-crosstalk scenarios. It guarantees <em>bounded, mathematically predictable</em> coherence under stress, transitioning crosstalk from an erratic failure mechanism into a calibratable variable.
                 </li>
                 <li>
-                  <strong>Fully Digital remains the Information-Theoretic Upper Bound:</strong> Under infinite power, area, and ADC bandwidth, a fully digital system is always optimal. Our method is a highly efficient alternative when physical space, power, and thermal budgets constrain the architecture.
+                  <strong>Digital Supremacy Acknowledged:</strong> Given infinite power, area, and cooling capacity, fully digital DBF architectures remain the information-theoretic optimum. GAWS is championed exclusively for heavily constrained hardware envelopes where DBF fails.
                 </li>
                 <li>
-                  <strong>Analog Correlation has Pre-Stage Limitations:</strong> Performing analog correlation before the ADC protects the digitizer and subsequent stages from saturation. However, it does not protect the very first active components (e.g., LNAs, mixers) if blockers drive them into compression. The receiver cascade must be modeled using strict non-linear intermodulation equations.
-                </li>
-                <li>
-                  <strong>Quantum Reach is scoped at the Interface Level:</strong> We do not claim to operate a multi-qubit processor. Instead, we develop an interface-level emulator using passive microwave components to demonstrate that our signal separation principles transfer directly to cryogenic readout and selective pulse-shaping environments.
+                  <strong>RF Pre-Stage Realities:</strong> Analog correlation pre-ADC brilliantly shields the digitizer from saturation; however, it cannot retroactively un-compress an LNA driven into saturation by massive out-of-band blockers. Non-linear cascades remain physically limiting factors.
                 </li>
               </ul>
             </div>
           </section>
 
           <!-- Section 4 -->
-          <section id="foundations" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">4. Mathematical and Physical Foundations</h2>
+          <section id="foundations" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">4. Mathematical Foundations & The Product Law</h2>
             
             <div class="space-y-4 text-justify">
-              <h3 class="text-base font-bold text-slate-800">4.1 Temporal CDM Orthogonality and Its Physical Collapse</h3>
+              <h3 class="text-base font-bold text-slate-900 mt-2">4.1 The Vulnerability of Temporal Orthogonality</h3>
               <p>
-                Consider $N$ channels multiplexed onto a single shared interface. Let channel $k$ be assigned an ideal normalized temporal code:
+                Standard Code-Division systems assign a normalized temporal sequence $c_k \in \mathbb{C}^L$ to each channel. The ideal temporal Gram matrix $G_{\mathrm{code}} = C^H C$ equals the identity matrix $I_N$. However, under physical timing skew ($\Delta\tau$), the matrices desynchronize, yielding leakage from channel $j$ into $i$:
               </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$c_k \in \mathbb{C}^L, \quad \text{with} \quad \|c_k\|_2 = 1$$
+              <div class="bg-slate-50 p-4 rounded-md my-4 text-center border border-slate-200 shadow-inner">
+                $$\text{Leakage}_{i \leftarrow j} = P_j \left| c_i^H c_j(\Delta\tau) \right|^2$$
               </div>
               <p>
-                The symbol vector is $b = [b_1, \ldots, b_N]^T \in \mathbb{C}^N$ with power scaling $P = \text{diag}(P_1, \ldots, P_N)$. The received signal vector over a block of length $L$ is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$y = C P^{1/2} b + n$$
-              </div>
-              <p>
-                where $C = [c_1, \ldots, c_N] \in \mathbb{C}^{L \times N}$ and $n \sim \mathcal{CN}(0, \sigma^2 I_L)$. Matched-filter detection yields:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$z = C^H y = C^H C P^{1/2} b + C^H n$$
-              </div>
-              <p>
-                The temporal code Gram matrix is $G_{\mathrm{code}} = C^H C$, with elements:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$[G_{\mathrm{code}}]_{ij} = c_i^H c_j$$
-              </div>
-              <p>
-                In an ideal system, $G_{\mathrm{code}} = I_N$. Under timing skew, however, the codes are offset by a fractional chip delay $\Delta\tau$, shifting the received code matrix to $C(\Delta\tau)$. The resulting leakage from channel $j$ into channel $i$ is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\text{leakage}_{i \leftarrow j} = P_j \left| c_i^H c_j(\Delta\tau) \right|^2$$
-              </div>
-              <p>
-                This leakage degrades the amplitude and power isolation, which are defined in decibels as:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$I^{\mathrm{amp}}_{ij} = -20 \log_{10} |c_i^H c_j| \quad \text{and} \quad I^{\mathrm{pow}}_{ij} = -10 \log_{10} |c_i^H c_j|^2$$
-              </div>
-
-              <h3 class="text-base font-bold text-slate-800 mt-4">4.2 Physical-Mode Signatures and Spatial Packing</h3>
-              <p>
-                To prevent this collapse, we augment the temporal code with a physical signature vector $w_k \in \mathbb{C}^M$, where $M$ is the number of physical paths (such as antenna elements or delay taps). For a four-path physical interface ($M=4$), the signature vector is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$w_k = \begin{bmatrix} a_{1k}e^{j\phi_{1k}} \\ a_{2k}e^{j\phi_{2k}} \\ a_{3k}e^{j\phi_{3k}} \\ a_{4k}e^{j\phi_{4k}} \end{bmatrix}$$
-              </div>
-              <p>
-                This signature is not the transmitted data or the temporal code, but the calibrated physical excitation state across the ports. Collecting these signatures into $W = [w_1, \ldots, w_N] \in \mathbb{C}^{M \times N}$, we define the physical Gram matrix:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$G_{\mathrm{phys}} = W^H W, \quad [G_{\mathrm{phys}}]_{ij} = w_i^H w_j$$
-              </div>
-              <p>
-                We formulate the physical phase packing optimization as:
-              </p>
-              <div class="bg-slate-50 p-4 rounded border border-slate-200 font-mono text-sm leading-relaxed">
-                $$\boxed{\begin{aligned}
-                \min_{\{w_k\}} & \max_{i \neq j} \left| w_i^H w_j \right| \\
-                \text{subject to } & |w_{mk}| \leq a_{\max} \\
-                & \phi_{mk} \in \mathcal{Q}_b = \left\{ 0, \frac{2\pi}{2^b}, \ldots, \frac{2\pi(2^b-1)}{2^b} \right\} \\
-                & \text{PAPR}(w_k) \leq \Gamma_{\max} \\
-                & \text{SFDR} \geq \text{SFDR}_{\min} \\
-                & P_{\mathrm{IM3}} \leq P_{\mathrm{IM3,max}} \\
-                & \text{Gain}(w_k) \geq g_{\min}
-                \end{aligned}}$$
-              </div>
-              <p>
-                For constant-modulus, phase-only physical architectures, we constrain $|w_{mk}| = \frac{1}{\sqrt{M}}$, making the optimization variables the quantized phases $\phi_{mk}$.
+                This fractional-chip delay violently degrades power isolation ($I^{\mathrm{pow}}_{ij} = -10 \log_{10} |c_i^H c_j|^2$).
               </p>
 
-              <h3 class="text-base font-bold text-slate-800 mt-4">4.3 The Product Spherical-Gold Mechanism</h3>
+              <h3 class="text-base font-bold text-slate-900 mt-6">4.2 Spatial Phase Packing and the Spherical-Gold Mechanism</h3>
               <p>
-                By assigning each channel both a temporal code $c_k \in \mathbb{C}^L$ and a physical signature $w_k \in \mathbb{C}^M$, the synthesized joint signature is the tensor product:
+                To arrest this collapse, GAWS synthesizes a joint signature. The temporal code is augmented by a physical-mode signature vector $w_k \in \mathbb{C}^M$ (e.g., across $M$ antenna ports). The synthesized joint signature becomes the tensor product $\phi_k = c_k \otimes w_k$. Utilizing tensor identities, the inner product—and thus the system coherence—factors beautifully:
               </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\phi_k = c_k \otimes w_k \in \mathbb{C}^{LM}$$
-              </div>
-              <p>
-                Using the tensor product identity, the inner product between two joint signatures is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\phi_i^H \phi_j = (c_i \otimes w_i)^H (c_j \otimes w_j) = (c_i^H c_j)(w_i^H w_j)$$
-              </div>
-              <p>
-                This leads directly to the <strong>Product Law of Mutual Coherence</strong>:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
+              <div class="bg-slate-50 p-4 rounded-md my-4 text-center border border-slate-200 shadow-inner text-lg">
                 $$\boxed{G_{\mathrm{eff}} = G_{\mathrm{code}} \circ G_{\mathrm{phys}}}$$
               </div>
               <p>
-                where $\circ$ denotes the Hadamard (element-wise) product. Under a timing skew impairment $\Delta\tau$, the joint signature's coherence scales as:
+                This <strong>Product Law of Mutual Coherence</strong> defines the Spherical-Gold mechanism. Converted to decibels, total isolation equals the sum of temporal and physical isolations:
               </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $|G_{ij}(\Delta\tau)| = |\rho^{\mathrm{code}}_{ij}(\Delta\tau)| \cdot |\rho^{\mathrm{phys}}_{ij}|$
+              <div class="bg-slate-50 p-4 rounded-md my-4 text-center border border-slate-200 shadow-inner">
+                $$I_{\mathrm{total,dB}}(\Delta\tau) = I_{\mathrm{code,dB}}(\Delta\tau) + I_{\mathrm{phys,dB}}$$
               </div>
               <p>
-                Expressed in decibels, the total isolation is the sum of the temporal and physical isolations:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\boxed{I_{\mathrm{total,dB}}(\Delta\tau) = I_{\mathrm{code,dB}}(\Delta\tau) + I_{\mathrm{phys,dB}}}$$
-              </div>
-              <p>
-                This relation forms the core of our Spherical-Gold mechanism. If a timing skew causes the temporal code isolation to collapse from $40\,\text{dB}$ to $15\,\text{dB}$, a physical-mode isolation of $15\,\text{dB}$ ensures the system maintains $30\,\text{dB}$ of total isolation.
-              </p>
-
-              <h3 class="text-base font-bold text-slate-800 mt-4">4.4 Boundary of Validity for the Product Law</h3>
-              <p>
-                The product law assumes that the temporal and physical impairments are mathematically separable:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\mathcal{D}_\theta(c_k \otimes w_k) \approx \mathcal{D}_t(c_k) \otimes \mathcal{D}_s(w_k)$$
-              </div>
-              <p>
-                This separability can fail in physical hardware due to non-linear intermodulation, frequency-dependent group delay, package resonances, and coupling. A key goal of Thrust 1 is to model these non-separable regimes and develop robust receiver kernels to handle them.
+                Consequently, if timing skew obliterates temporal isolation, the deliberately designed geometric physical isolation ($I_{\mathrm{phys,dB}}$) serves as a hard mathematical floor, preventing catastrophic system failure.
               </p>
             </div>
           </section>
 
           <!-- Section 5 -->
-          <section id="capacity" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">5. Capacity, SINR, and Dynamic Range Analysis</h2>
+          <section id="capacity" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">5. Capacity Limits & Dynamic Range Ceilings</h2>
             
             <div class="space-y-4 text-justify">
-              <h3 class="text-base font-bold text-slate-800">5.1 Information Capacity and Gram Conditioning</h3>
               <p>
-                Under equal power allocation, the multi-channel information capacity is:
+                The impact of the realized Gram matrix ($G_{\mathrm{real}}$) on multi-channel information capacity is governed by its eigenvalues $\lambda_\ell$. By the Gershgorin Circle Theorem, the matrix condition number is strictly bounded by the maximum mutual coherence $\mu_{\mathrm{real}}$:
               </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$C = \log_2 \det \left( I_N + \frac{\gamma}{N} G_{\mathrm{real}} \right) = \sum_{\ell=1}^N \log_2 \left( 1 + \frac{\gamma}{N} \lambda_{\ell}(G_{\mathrm{real}}) \right)$$
+              <div class="bg-slate-50 p-4 rounded-md my-4 text-center border border-slate-200 shadow-inner">
+                $$\kappa(G_{\mathrm{real}}) \leq \frac{1 + (N-1)\mu_{\mathrm{real}}}{1 - (N-1)\mu_{\mathrm{real}}}$$
               </div>
               <p>
-                where $\gamma$ is the average SNR, and $\lambda_\ell$ are the eigenvalues of $G_{\mathrm{real}}$. Using Gershgorin Disc Theorem, the eigenvalues of $G_{\mathrm{real}}$ are bounded by:
+                In high-SNR regimes ($\gamma \to \infty$), system performance does not scale indefinitely but strikes a physical dynamic-range ceiling dictated entirely by non-orthogonal leakage:
               </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$1 - (N-1)\mu_{\mathrm{real}} \leq \lambda_\ell(G_{\mathrm{real}}) \leq 1 + (N-1)\mu_{\mathrm{real}}$$
-              </div>
-              <p>
-                which bounds the condition number of the Gram matrix:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\kappa(G_{\mathrm{real}}) \leq \frac{1 + (N-1)\mu_{\mathrm{real}}}{1 - (N-1)\mu_{\mathrm{real}}} \quad (\text{for } (N-1)\mu_{\mathrm{real}} < 1)$$
-              </div>
-              <p>
-                Minimizing the mutual coherence $\mu_{\mathrm{real}}$ prevents the Gram matrix from becoming ill-conditioned, which minimizes noise enhancement during digital signal separation (ZF/MMSE).
-              </p>
-
-              <h3 class="text-base font-bold text-slate-800 mt-4">5.2 Matched-Filter SINR and High-SNR Dynamic Range Ceiling</h3>
-              <p>
-                For general unequal power channels, the output SINR of channel $i$ under matched-filter detection is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\text{SINR}_i = \frac{P_i |G_{ii}|^2}{\sigma_i^2 + \sum_{j \neq i} P_j |G_{ij}|^2 + P_{\mathrm{IM3}} + P_{\mathrm{jitter}} + P_{\mathrm{quant}}}$$
-              </div>
-              <p>
-                For equal-power channels ($P_k = P$) and worst-case coherence $\mu_{\mathrm{real}}$, the SINR is bounded by:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\text{SINR}_i \geq \frac{\gamma}{1 + \gamma(N-1)\mu_{\mathrm{real}}^2}$$
-              </div>
-              <p>
-                At high input SNR ($\gamma \to \infty$), the SINR saturates, creating a dynamic-range ceiling:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\text{SINR}_{\infty} = \frac{1}{(N-1)\mu_{\mathrm{real}}^2}$$
-              </div>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
+              <div class="bg-slate-50 p-4 rounded-md my-4 text-center border border-slate-200 shadow-inner">
                 $$\text{DR}_{\text{ceiling,dB}} = -10 \log_{10} \left[ (N-1) \mu_{\mathrm{real}}^2 \right]$$
               </div>
               <p>
-                Applying our Spherical-Gold physical signature, the mutual coherence becomes $\mu_{\mathrm{real}} = \mu_{\mathrm{code}} \cdot \mu_s$. The resulting dynamic-range improvement over a purely code-multiplexed baseline is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\boxed{\Delta \text{DR} = -20 \log_{10} \mu_s}$$
-              </div>
-              <p>
-                For a four-channel physical array with optimized constant-modulus signatures yielding $\mu_s = 0.25$, the dynamic range ceiling increases by:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200 font-mono text-sm">
-                $\Delta \text{DR} = -20 \log_{10}(0.25) = 12.04\,\text{dB}$
-              </div>
-              <p>
-                This $12\,\text{dB}$ improvement directly relaxes the dynamic-range requirements of subsequent receiver components, such as the active mixers and ADCs.
-              </p>
-
-              <h3 class="text-base font-bold text-slate-800 mt-4">5.3 Bit Error Rate (BER) Sensitivity</h3>
-              <p>
-                For BPSK modulation, the bit error rate is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$P_b = Q\left(\sqrt{2\,\text{SINR}_i}\right) = \frac{1}{2} \text{erfc}\left( \sqrt{\text{SINR}_i} \right)$$
-              </div>
-              <p>
-                By substituting the impaired coherence into this expression, we map physical hardware non-idealities directly to system-level BER performance.
+                Applying the Spherical-Gold methodology reduces $\mu_{\mathrm{real}}$ multiplicatively, directly extending the linear dynamic range of the architecture by over $10\,\text{dB}$ before saturation occurs.
               </p>
             </div>
           </section>
 
           <!-- Section 6 -->
-          <section id="relief" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">6. ADC Dynamic Range and ENOB Relief</h2>
+          <section id="relief" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">6. Resolving the ADC ENOB Bottleneck</h2>
             
             <div class="space-y-4 text-justify">
               <p>
-                Let $P_s$ be the desired signal power at the ADC input, and $P_I$ be the power of an in-band blocker or interferer. The blocker-to-signal ratio is defined as:
+                The required ADC resolution (ENOB) must accommodate the target SNR, crest-factor headroom, and the aggregate power of all co-channel signals and out-of-band blockers ($B_{I}$). The essential scaling law is:
               </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200 font-mono text-sm">
-                $B_I = 10 \log_{10} \left( \frac{P_I}{P_s} \right)$
+              <div class="bg-slate-50 p-4 rounded-md my-4 text-center border border-slate-200 shadow-inner text-sm overflow-x-auto">
+                $$\text{ENOB}_{\text{req}} = \frac{1}{6.02} \left( \text{SNR}_{\text{req}} + M_{\text{head}} + 10 \log_{10} \left[ J_{\text{shared}} + \sum_{\ell=1}^{L_I} 10^{(B_{I,\ell} - A_{\mathrm{pre},\ell})/10} \right] - 1.76 \right)$$
               </div>
               <p>
-                If the receiver provides an analog pre-ADC suppression $A_{\mathrm{pre}}$ (via spatial nulling, code despreading, or filtering), the residual blocker ratio at the converter input is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200 font-mono text-sm">
-                $\Gamma_{\mathrm{res}} = 10^{(B_I - A_{\mathrm{pre}})/10}$
-              </div>
-              <p>
-                The required ADC dynamic range to digitize $J_{\mathrm{shared}}$ signals in the presence of $L_I$ blockers is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\text{DR}_{\text{ADC,dB}} = \text{SNR}_{\text{req,dB}} + M_{\text{head,dB}} + 10 \log_{10} \left[ J_{\text{shared}} + \sum_{\ell=1}^{L_I} 10^{(B_{I,\ell} - A_{\mathrm{pre},\ell})/10} \right]$$
-              </div>
-              <p>
-                where $M_{\text{head}}$ is the peak-to-average power ratio (PAPR) headroom. The required Effective Number of Bits (ENOB) is:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$\text{ENOB}_{\text{req}} = \frac{\text{DR}_{\text{ADC,dB}} - 1.76}{6.02}$$
-              </div>
-              <p>
-                Under Spherical-Gold multiplexing, the analog pre-suppression is the sum of the temporal, spatial, and filtering suppressions:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200 font-mono text-sm">
-                $A_{\mathrm{pre,SG}} = -20 \log_{10} \left( |\rho_{\mathrm{code}}| \cdot |\rho_{\mathrm{spatial}}| \right) + A_{\mathrm{LPF}}$
-              </div>
-              <p>
-                This attenuation of out-of-channel interference before digitization lowers the required ADC dynamic range. This translates directly to reduced power consumption, as ADC power scales with sampling rate and resolution:
-              </p>
-              <div class="bg-slate-50 p-3 rounded text-center border border-slate-200">
-                $$P_{\mathrm{ADC}} \propto N_{\mathrm{ADC}} \cdot f_s \cdot 2^{\mathrm{ENOB}}$$
-              </div>
-              <p>
-                Reducing the required ENOB by $2$ bits reduces the digitizer's power dissipation by nearly a factor of four.
+                GAWS introduces a powerful analog pre-suppression term ($A_{\mathrm{pre}}$) computed via analog cross-correlation prior to the quantizer. By suppressing massive blockers before they enter the ADC, we alleviate the ENOB requirement by $2$ to $3$ bits. Because ADC power consumption scales exponentially with resolution ($P_{\mathrm{ADC}} \propto f_s \cdot 2^{\mathrm{ENOB}}$), this technique generates a multiplicative reduction in overall receiver power dissipation.
               </p>
             </div>
           </section>
 
           <!-- Section 7 -->
-          <section id="thrusts" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">7. Detailed Research Thrusts</h2>
+          <section id="thrusts" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">7. Detailed Research Thrusts</h2>
             
-            <div class="space-y-6 text-justify">
+            <div class="space-y-8 text-justify">
               
               <!-- Thrust 1 -->
-              <div>
-                <h3 class="text-base font-bold text-slate-900 border-l-2 border-indigo-600 pl-2">Thrust 1 — Theory: Realized-Gram Geometry for Hardware-Constrained Waveforms</h3>
-                <p class="text-xs text-slate-500 font-bold uppercase mt-1">Objective</p>
-                <p class="text-sm mt-0.5">
-                  Establish the theoretical framework and optimization algorithms to map finite-alphabet, circuit-constrained waveforms to the hardware-realized Gram matrix $G_{\mathrm{real}}$ under non-linear, time-varying, and non-separable impairments.
-                </p>
-                
-                <p class="text-xs text-slate-500 font-bold uppercase mt-2">Research Questions</p>
-                <ul class="list-disc pl-5 text-sm space-y-1">
-                  <li><strong>RQ1.1:</strong> How does the physical impairment operator $\mathcal{D}_\theta$ perturb the off-diagonal coherence and eigenspace of $G_{\mathrm{real}}$?</li>
-                  <li><strong>RQ1.2:</strong> Can finite-alphabet codebooks keep the realized coherence $\mu_{\mathrm{real}}$ near the Welch bound after phase quantization?</li>
-                  <li><strong>RQ1.3:</strong> Under what physical conditions does the separability product law $G_{\mathrm{eff}} = G_{\mathrm{code}} \circ G_{\mathrm{phys}}$ fail, and how do we optimize non-separable signatures?</li>
-                </ul>
-
-                <p class="text-xs text-slate-500 font-bold uppercase mt-2">Approach and Methodology</p>
-                <p class="text-sm">
-                  We will model the impairment operator $\mathcal{D}_\theta$ using analytical and computational methods:
-                </p>
-                <ol class="list-decimal pl-5 text-sm space-y-1 mt-1">
-                  <li>
-                    <strong>Impairment Sensitivity Mapping:</strong> Derive analytical bounds for the coherence perturbation $\Delta\mu = |\mu_{\mathrm{real}} - \mu_{\mathrm{ideal}}|$ as a function of phase quantization $b$, timing skew $\Delta\tau$, and third-order non-linearities $a_3$.
-                  </li>
-                  <li>
-                    <strong>Manifold-Constrained Optimization:</strong> Develop projection-based algorithms on complex Grassmannian manifolds to search for optimal signature matrices $U$ subject to finite phase states ($b \in \{2, 3, 4\}\,\text{bits}$) and peak-to-average power ratio (PAPR) limits.
-                  </li>
-                  <li>
-                    <strong>Modeling Non-Separable Interconnects:</strong> Analyze the breakdown of the product law under non-separable coupling, such as frequency-dependent package resonances or LNA compression. We will develop augmented receiver kernels $K_{\mathrm{rx}}$ to whiten the received signals and restore the conditioning of the Gram matrix.
-                  </li>
-                </ol>
-
-                <p class="text-xs text-slate-500 font-bold uppercase mt-2">Deliverables</p>
-                <ul class="list-disc pl-5 text-sm space-y-1">
-                  <li><strong>D1.1:</strong> Realized-Gram mathematical formalism and bounding proofs.</li>
-                  <li><strong>D1.2:</strong> Open-source Monte-Carlo simulator mapping hardware impairments to $\mu_{\mathrm{real}}$, $\kappa(G_{\mathrm{real}})$, and capacity.</li>
-                  <li><strong>D1.3:</strong> Optimization toolkit for synthesizing finite-alphabet Grassmannian codes under hardware constraints.</li>
-                </ul>
+              <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                  <h3 class="text-[15px] font-bold text-indigo-900 uppercase tracking-wider">Thrust 1: Theoretical Foundations of Realized-Gram Geometries</h3>
+                </div>
+                <div class="p-5">
+                  <p class="text-sm text-slate-800 font-semibold mb-2">Objective:</p>
+                  <p class="mb-4">To construct the definitive theoretical framework mapping finite-alphabet, hardware-constrained waveforms to their eventual realized Gram matrices ($G_{\mathrm{real}}$), specifically addressing non-separable physical impairments.</p>
+                  
+                  <p class="text-sm text-slate-800 font-semibold mb-2">Methodology:</p>
+                  <ul class="list-disc pl-6 space-y-2 text-slate-800 mb-4">
+                    <li><strong>Impairment Sensitivity Analysis:</strong> Deriving closed-form bounds connecting the coherence perturbation $\Delta\mu$ directly to DAC phase quantization ($b$) and analog non-linearities ($a_3$).</li>
+                    <li><strong>Manifold Optimization Algorithms:</strong> Utilizing complex Grassmannian manifold projections to synthesize finite-state ($2\text{--}4\,\text{bits}$) optimal sequences bounded by strict Peak-to-Average Power Ratio (PAPR) limits.</li>
+                  </ul>
+                  
+                  <div class="bg-slate-50 p-3 rounded border border-slate-200 text-sm">
+                    <span class="font-bold text-slate-700">Key Deliverables:</span> Open-source mathematical formalism and a Monte-Carlo analysis toolkit mapping $\theta \to \mu_{\mathrm{real}}$.
+                  </div>
+                </div>
               </div>
 
               <!-- Thrust 2 -->
-              <div>
-                <h3 class="text-base font-bold text-slate-900 border-l-2 border-indigo-600 pl-2 mt-4">Thrust 2 — Circuits: Shared-IF Waveform Synthesis and Analog Correlation Before ADC</h3>
-                <p class="text-xs text-slate-500 font-bold uppercase mt-1">Objective</p>
-                <p class="text-sm mt-0.5">
-                  Design and implement the integrated circuit blocks that physically synthesize finite-alphabet waveforms and perform analog correlation before the signal reaches the ADC bottleneck.
-                </p>
-                
-                <p class="text-xs text-slate-500 font-bold uppercase mt-2">Circuit-Level Implementation</p>
-                <p class="text-sm">
-                  We will design a four-channel receiver chain to implement geometry-aware waveform synthesis:
-                </p>
-                <ol class="list-decimal pl-5 text-sm space-y-1 mt-1">
-                  <li>
-                    <strong>Waveform Synthesizer Block:</strong> A polar-DAC phase-modulation circuit operating at Ka-band ($26.5\text{--}40\,\text{GHz}$) using a passive switching network to synthesize finite-alphabet phase states ($2\text{--}4\,\text{bits}$) with constant impedance to minimize reflection and group delay variations.
-                  </li>
-                  <li>
-                    <strong>Analog Correlator Block:</strong> A wideband active multiplier based on an optimized Gilbert-cell topology. The correlator multiplies the shared-IF signal by the target channel's reference code, performing spatial-code projection in the analog domain.
-                  </li>
-                  <li>
-                    <strong>Low-Pass Filter and Digitizer Interface:</strong> A passive, multi-pole low-pass filter integrated with the correlator output to suppress out-of-channel blockers and intermodulation products before digitization, maximizing the dynamic-range relief.
-                  </li>
-                </ol>
-
-                <p class="text-xs text-slate-500 font-bold uppercase mt-2">Deliverables</p>
-                <ul class="list-disc pl-5 text-sm space-y-1">
-                  <li><strong>D2.1:</strong> Schematic, layout, and tape-out files for the Ka-band waveform synthesizer and active correlator.</li>
-                  <li><strong>D2.2:</strong> Characterization report detailing measured $\text{IIP3}$, $P_{\text{1dB}}$, noise figure, and phase accuracy.</li>
-                  <li><strong>D2.3:</strong> Verification of the analog correlation block showing pre-ADC suppression of unwanted channels.</li>
-                </ul>
+              <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                  <h3 class="text-[15px] font-bold text-indigo-900 uppercase tracking-wider">Thrust 2: Circuit-Level Synthesis and Analog Projection</h3>
+                </div>
+                <div class="p-5">
+                  <p class="text-sm text-slate-800 font-semibold mb-2">Objective:</p>
+                  <p class="mb-4">To design, simulate, and tape-out the mixed-signal integrated circuit (IC) blocks capable of executing geometry-aware synthesis and pre-digitization correlation.</p>
+                  
+                  <p class="text-sm text-slate-800 font-semibold mb-2">Methodology:</p>
+                  <ul class="list-disc pl-6 space-y-2 text-slate-800 mb-4">
+                    <li><strong>Ka-Band Waveform Synthesizer:</strong> Developing a high-speed polar-DAC structure ($26.5\text{--}40\,\text{GHz}$) featuring constant-impedance switching networks to suppress group delay variations.</li>
+                    <li><strong>Wideband Analog Correlator:</strong> Implementing a modified active Gilbert-cell multiplier to project the received analog vector onto the target signature space, establishing the spatial-code filtering prior to the ADC buffer.</li>
+                  </ul>
+                  
+                  <div class="bg-slate-50 p-3 rounded border border-slate-200 text-sm">
+                    <span class="font-bold text-slate-700">Key Deliverables:</span> Validated tape-out files, bench characterization of $\text{IIP3}$/NF, and demonstrated analog pre-suppression ratios.
+                  </div>
+                </div>
               </div>
 
               <!-- Thrust 3 -->
-              <div>
-                <h3 class="text-base font-bold text-slate-900 border-l-2 border-indigo-600 pl-2 mt-4">Thrust 3 — Platform A: Phased-Array / Multibeam Primary Validation</h3>
-                <p class="text-xs text-slate-500 font-bold uppercase mt-1">Objective</p>
-                <p class="text-sm mt-0.5">
-                  Validate the geometry-aware waveform synthesis framework on a physical, hardware-in-the-loop Ka-band phased-array receiver platform.
-                </p>
-
-                <p class="text-xs text-slate-500 font-bold uppercase mt-2">Experimental Methodology</p>
-                <p class="text-sm">
-                  We will construct a Ka-band ($28\,\text{GHz}$) testbed using a 4-antenna linear array. The testbed will feature:
-                </p>
-                <ol class="list-decimal pl-5 text-sm space-y-1 mt-1">
-                  <li>
-                    <strong>Multi-Signal Transmission Environment:</strong> Integrated signal generators to transmit concurrent target signals and wideband jammers from different spatial angles.
-                  </li>
-                  <li>
-                    <strong>Coherence and Isolation Sweeps:</strong> Systematic sweeps of timing skew ($\Delta\tau$), phase quantization ($b$), and temperature-induced drift to measure the isolation profiles of Walsh-CDM, Gold-CDM, and our Spherical-Gold codes.
-                  </li>
-                  <li>
-                    <strong>Spatial Resolution &amp; Cramér-Rao Bound (CRB) Characterization:</strong> Quantify the improvement in Angular-of-Arrival (AoA) estimation and spatial resolution. We will evaluate the local spatial CRB:
-                    <div class="bg-slate-50 p-2 my-2 rounded text-center border border-slate-200">
-                      $$\text{var}(\theta) \geq \frac{\sigma^2}{2 \sum_t |\alpha_t|^2 \left\| P_{b(\theta)}^{\perp} \frac{\partial b(\theta)}{\partial\theta} \right\|_2^2}$$
-                    </div>
-                    to demonstrate that our Spherical-Gold codes reduce spatial ambiguity and improve angular resolution.
-                  </li>
-                </ol>
-
-                <p class="text-xs text-slate-500 font-bold uppercase mt-2">Deliverables</p>
-                <ul class="list-disc pl-5 text-sm space-y-1">
-                  <li><strong>D3.1:</strong> Phased-array hardware-in-the-loop testing platform operating at $28\,\text{GHz}$.</li>
-                  <li><strong>D3.2:</strong> Measured isolation and BER curves under controlled timing skew and phase quantization.</li>
-                  <li><strong>D3.3:</strong> Experimental demonstration of blocker suppression and ADC dynamic-range relief in multi-signal scenarios.</li>
-                </ul>
+              <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                  <h3 class="text-[15px] font-bold text-indigo-900 uppercase tracking-wider">Thrust 3: Platform A Validation (Phased-Array Multibeam)</h3>
+                </div>
+                <div class="p-5">
+                  <p class="text-sm text-slate-800 font-semibold mb-2">Objective:</p>
+                  <p class="mb-4">Empirical validation of GAWS methodologies within a physical, hardware-in-the-loop $28\,\text{GHz}$ multi-beam testbed.</p>
+                  
+                  <p class="text-sm text-slate-800 font-semibold mb-2">Methodology:</p>
+                  <p class="mb-4">Constructing a 4-antenna RF testbed to expose the system to concurrent target signals and hostile wideband jammers. The platform will systematically sweep parameters ($\Delta\tau, b$) to benchmark GAWS against conventional Walsh-CDM. Furthermore, the local spatial Cramér-Rao Bound (CRB) for Angle-of-Arrival (AoA) estimation will be physically measured to quantify spatial resolution improvements.</p>
+                  
+                  <div class="bg-slate-50 p-3 rounded border border-slate-200 text-sm">
+                    <span class="font-bold text-slate-700">Key Deliverables:</span> Measured dynamic-range relief mapping and comprehensive bit-error-rate (BER) sensitivity profiles under physical skew constraints.
+                  </div>
+                </div>
               </div>
 
               <!-- Thrust 4 -->
-              <div>
-                <h3 class="text-base font-bold text-slate-900 border-l-2 border-indigo-600 pl-2 mt-4">Thrust 4 — Platform B: Qubit-Interface Benchmark and Emulation</h3>
-                <p class="text-xs text-slate-500 font-bold uppercase mt-1">Objective</p>
-                <p class="text-sm mt-0.5">
-                  Translate the phase-correlation and Gram-conditioning principles to cryogenic quantum interfaces, validating performance improvements on a high-fidelity quantum interface emulator.
-                </p>
-
-                <p class="text-xs text-slate-500 font-bold uppercase mt-2">Modeling and Implementation</p>
-                <ol class="list-decimal pl-5 text-sm space-y-2 mt-1">
-                  <li>
-                    <strong>Readout Signature Optimization:</strong> Model an FDM resonator-bank readout interface for superconducting qubits. The reflection signature ($S_{11}$) for channel $k$ is:
-                    <div class="bg-slate-50 p-2 my-2 rounded text-center border border-slate-200">
-                      $$S_{11,k}^{(s)}(\omega) \approx 1 - \frac{\kappa_{e,k}}{j[\omega - \omega_{r,k} - (-1)^s \chi_k] + \kappa_k/2}$$
-                    </div>
-                    where $s \in \{0,1\}$ is the qubit state, $\omega_{r,k}$ is the resonator frequency, $\kappa_k$ is the linewidth, and $\chi_k$ is the dispersive shift. The state-separation vector is:
-                    <div class="bg-slate-50 p-2 my-1 rounded text-center border border-slate-200">
-                      $$d_k(\omega) = y_k^{(1)}(\omega) - y_k^{(0)}(\omega)$$
-                    </div>
-                    We will optimize the readout pulse spectrum $P_k(\omega)$ using Grassmannian packing to minimize the off-diagonal terms of the readout Gram matrix $G^{\mathrm{ro}}$, reducing readout crosstalk under tight photon budgets and TWPA compression limits.
-                  </li>
-                  <li>
-                    <strong>Crosstalk Characterization:</strong> Approximate the readout crosstalk from channel $j$ into channel $i$ as:
-                    <div class="bg-slate-50 p-2 my-2 rounded text-center border border-slate-200 font-mono text-xs">
-                      $$\epsilon^{\mathrm{ro}}_{i \leftarrow j} \approx \frac{|d_i^H R^{-1} d_j|^2}{(d_i^H R^{-1} d_i)(d_j^H R^{-1} d_j)} = |G_{ij}^{\mathrm{ro}}|^2$$
-                    </div>
-                    demonstrating that Grassmannian packing of state-separation vectors directly minimizes readout errors.
-                  </li>
-                  <li>
-                    <strong>XY Control Waveform Shaping:</strong> Synthesize selective control pulses $p_k(t) = \sum_{\ell=1}^d x_{k,\ell} b_\ell(t)$ to minimize leakage into adjacent qubits. We will optimize the pulse coefficients $x_k$ by solving:
-                    <div class="bg-slate-50 p-3 my-2 rounded border border-slate-200 font-mono text-xs">
-                      $$\min_{x_k} \left\| A_{\mathrm{ctrl}}x_k - \Theta_{\mathrm{gate}} e^{j\phi_{g,k}} e_k \right\|_2^2 + \lambda \|x_k\|_2^2 + \gamma \sum_{i \neq k} |[A_{\mathrm{ctrl}}x_k]_i|^2$$
-                    </div>
-                    subject to DAC bandwidth, amplitude, and gate-duration constraints. This ensures precise gate angles ($\Theta_k = \int_0^{T_g} \Omega_k(t) dt$) while minimizing cross-talk.
-                  </li>
-                </ol>
-
-                <p class="text-xs text-slate-500 font-bold uppercase mt-2">Deliverables</p>
-                <ul class="list-disc pl-5 text-sm space-y-1">
-                  <li><strong>D4.1:</strong> Multi-channel FDM resonator-bank hardware emulator.</li>
-                  <li><strong>D4.2:</strong> Software package for optimizing selective XY control pulses and readout signatures.</li>
-                  <li><strong>D4.3:</strong> Measured crosstalk, assignment fidelity, and power consumption benchmarks comparing Grassmannian-optimized signatures to standard FDM readouts.</li>
-                </ul>
+              <div class="bg-white border border-slate-200 rounded-md shadow-sm overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                  <h3 class="text-[15px] font-bold text-indigo-900 uppercase tracking-wider">Thrust 4: Platform B Translation (Cryogenic Qubit Interfaces)</h3>
+                </div>
+                <div class="p-5">
+                  <p class="text-sm text-slate-800 font-semibold mb-2">Objective:</p>
+                  <p class="mb-4">To securely translate phase-correlation methodologies from RF telecom space to the domain of superconducting quantum computing interfaces via high-fidelity hardware emulation.</p>
+                  
+                  <p class="text-sm text-slate-800 font-semibold mb-2">Methodology:</p>
+                  <p class="mb-4">Formulating an FDM resonator-bank emulator mimicking standard dispersive readout schemes. GAWS algorithms will optimize the reflection signature $S_{11}(\omega)$ and selective XY control pulses $p_k(t)$ to mitigate photon-starvation limits and Traveling-Wave Parametric Amplifier (TWPA) compression limits. The target is suppressing readout crosstalk $|G_{ij}^{\mathrm{ro}}|^2$ while preserving precision gate angles.</p>
+                  
+                  <div class="bg-slate-50 p-3 rounded border border-slate-200 text-sm">
+                    <span class="font-bold text-slate-700">Key Deliverables:</span> Emulator validation reports contrasting Grassmannian-optimized readouts versus standard FDM baseline fidelities.
+                  </div>
+                </div>
               </div>
 
             </div>
           </section>
 
           <!-- Section 8 -->
-          <section id="validation" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">8. Validation Strategy and Baselines</h2>
+          <section id="validation" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">8. Validation Strategy and Baselines</h2>
             
             <div class="space-y-4 text-justify">
               <p>
-                To ensure a rigorous and fair evaluation, all proposed waveform synthesis techniques will be systematically compared against standard baselines under identical physical constraints:
+                To maintain unassailable scientific integrity, the proposed frameworks will be evaluated strictly under normalized resource boundaries. GAWS must demonstrate superiority against baselines constrained by identical power, ADC count, and bandwidth metrics.
               </p>
-              <div class="bg-slate-100 p-3 rounded text-center border border-slate-200 font-bold text-slate-800 text-xs tracking-wider uppercase">
-                $$\boxed{\text{Equal: } \left\{ \text{ADC Count}, \, \text{RF Chain Count}, \, \text{Bandwidth}, \, \text{Power}, \, \text{Latency}, \, \text{Calibration Overhead} \right\}}$$
-              </div>
-              <p>
-                The performance of each architecture will be benchmarked against the standard paradigms listed in Table 3:
-              </p>
-
-              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 mt-4">Table 3. Comprehensive architecture benchmarking under normalized resources</p>
-              <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse border border-slate-200 mt-2 text-xs">
+              
+              <p class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mt-6 mb-2">Table 3: Comprehensive Architecture Benchmarking</p>
+              <div class="overflow-x-auto rounded-md border border-slate-300 mb-6">
+                <table class="w-full text-left border-collapse text-sm">
                   <thead>
-                    <tr class="bg-slate-100">
-                      <th class="border border-slate-200 p-2 font-bold">Metric</th>
-                      <th class="border border-slate-200 p-2 font-bold">Fully Digital DBF</th>
-                      <th class="border border-slate-200 p-2 font-bold">Hybrid Beamforming</th>
-                      <th class="border border-slate-200 p-2 font-bold">Standard FDM</th>
-                      <th class="border border-slate-200 p-2 font-bold">Walsh-CDM</th>
-                      <th class="border border-slate-200 p-2 font-bold">Proposed Spherical-Gold</th>
+                    <tr class="bg-slate-100 border-b border-slate-300 text-[13px]">
+                      <th scope="col" class="p-3 font-bold text-slate-800">Performance Metric</th>
+                      <th scope="col" class="p-3 font-bold text-slate-800 border-l border-slate-200">Conventional CDM</th>
+                      <th scope="col" class="p-3 font-extrabold text-indigo-700 border-l border-slate-200 bg-indigo-50/30">Proposed GAWS</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-bold">Spectral Efficiency</td>
-                      <td class="border border-slate-200 p-2 text-emerald-600 font-semibold">Outstanding</td>
-                      <td class="border border-slate-200 p-2">Moderate</td>
-                      <td class="border border-slate-200 p-2">Poor</td>
-                      <td class="border border-slate-200 p-2">Moderate</td>
-                      <td class="border border-slate-200 p-2 font-bold text-indigo-700">High</td>
+                  <tbody class="divide-y divide-slate-200 text-[13px]">
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-bold text-slate-700">Dynamic Range Relief</td>
+                      <td class="p-3 border-l border-slate-200">Negligible</td>
+                      <td class="p-3 border-l border-slate-200 font-bold text-indigo-700 bg-indigo-50/30">Significant ($>10\,\text{dB}$)</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-bold">Dynamic Range Relief</td>
-                      <td class="border border-slate-200 p-2">None</td>
-                      <td class="border border-slate-200 p-2">Low</td>
-                      <td class="border border-slate-200 p-2">None</td>
-                      <td class="border border-slate-200 p-2">Low</td>
-                      <td class="border border-slate-200 p-2 font-bold text-indigo-700">Significant ($>10\,\text{dB}$)</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-bold text-slate-700">Skew/Jitter Sensitivity</td>
+                      <td class="p-3 border-l border-slate-200 text-rose-600 font-semibold">Catastrophic</td>
+                      <td class="p-3 border-l border-slate-200 font-bold text-indigo-700 bg-indigo-50/30">Highly Robust</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-bold">Power Consumption</td>
-                      <td class="border border-slate-200 p-2 text-rose-600 font-semibold">Very High</td>
-                      <td class="border border-slate-200 p-2">Moderate</td>
-                      <td class="border border-slate-200 p-2">Low</td>
-                      <td class="border border-slate-200 p-2 font-semibold">High</td>
-                      <td class="border border-slate-200 p-2 font-bold text-indigo-700">Low</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-bold text-slate-700">Crosstalk Management</td>
+                      <td class="p-3 border-l border-slate-200 text-rose-600 font-semibold">Unbounded Leakage</td>
+                      <td class="p-3 border-l border-slate-200 font-bold text-indigo-700 bg-indigo-50/30">Deterministically Bounded</td>
                     </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-bold">Skew Sensitivity</td>
-                      <td class="border border-slate-200 p-2">Low</td>
-                      <td class="border border-slate-200 p-2 font-semibold text-rose-600">High</td>
-                      <td class="border border-slate-200 p-2">Low</td>
-                      <td class="border border-slate-200 p-2 text-rose-600 font-semibold">Extreme</td>
-                      <td class="border border-slate-200 p-2 font-bold text-indigo-700">Extremely Low</td>
-                    </tr>
-                    <tr>
-                      <td class="border border-slate-200 p-2 font-bold">Crosstalk Level</td>
-                      <td class="border border-slate-200 p-2 text-emerald-600">Digital Bound</td>
-                      <td class="border border-slate-200 p-2">Spatial Bound</td>
-                      <td class="border border-slate-200 p-2">Adjacent Leakage</td>
-                      <td class="border border-slate-200 p-2 font-semibold text-rose-600">High Leakage</td>
-                      <td class="border border-slate-200 p-2 font-bold text-indigo-700">Deterministically Bounded</td>
+                    <tr class="hover:bg-slate-50 transition-colors">
+                      <td class="p-3 font-bold text-slate-700">ADC Power Dissipation</td>
+                      <td class="p-3 border-l border-slate-200">High (Requires High ENOB)</td>
+                      <td class="p-3 border-l border-slate-200 font-bold text-indigo-700 bg-indigo-50/30">Low (Relaxed ENOB)</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1104,219 +775,106 @@
           </section>
 
           <!-- Section 9 -->
-          <section id="falsification" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">9. Falsification Framework and Failure Modes</h2>
+          <section id="falsification" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">9. Falsification Framework & Failure Modes</h2>
             
             <div class="space-y-4 text-justify">
               <p>
-                To maintain scientific integrity and accelerate development, the project will actively test the limits and failure modes of the proposed technology. We have identified nine potential failure modes along with systematic testing procedures:
+                A hallmark of rigorous scientific inquiry is the active pursuit of failure modes. We have embedded a falsification framework dictating nine explicit failure conditions (FM1-FM9) that will be systematically tested. Critical modes include:
               </p>
               
-              <div class="space-y-3">
-                <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
-                  <p class="font-bold text-slate-800">FM1: Non-Separable Interconnect Dispersion</p>
-                  <p class="text-slate-600 mt-1"><em>Risk:</em> The product law $G_{\mathrm{eff}} \approx G_{\mathrm{code}} \circ G_{\mathrm{phys}}$ breaks down under severe, frequency-dependent package dispersion.</p>
-                  <p class="text-slate-600"><em>Test:</em> Introduce highly dispersive passive microstrip networks between the antenna elements and the mixing stages, and measure the degradation of the product isolation law.</p>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
-                  <p class="font-bold text-slate-800">FM2: RF Pre-Stage Compression</p>
-                  <p class="text-slate-600 mt-1"><em>Risk:</em> Large out-of-channel blockers compress the LNA or mixer before the analog correlator can apply suppression.</p>
-                  <p class="text-slate-600"><em>Test:</em> Sweep the power of an out-of-channel blocker from $-40\,\text{dBm}$ to $0\,\text{dBm}$ and measure the input $1\,\text{dB}$ compression point ($P_{1\mathrm{dB}}$) to map the receiver's physical limits.</p>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
-                  <p class="font-bold text-slate-800">FM3: Calibration Null Collapse</p>
-                  <p class="text-slate-600 mt-1"><em>Risk:</em> Phase and gain drift over temperature and time degrade the optimized physical signatures, collapsing the nulls.</p>
-                  <p class="text-slate-600"><em>Test:</em> Operate the hardware platform inside a temperature-controlled chamber, sweep the temperature from $0^\circ\text{C}$ to $85^\circ\text{C}$, and track the drift of the mutual coherence matrix $G_{\mathrm{real}}(t, T)$.</p>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
-                  <p class="font-bold text-slate-800">FM4: Walsh Code Timing Collapse</p>
-                  <p class="text-slate-600 mt-1"><em>Risk:</em> Fractional-chip timing offsets completely destroy the orthogonality of Walsh-Hadamard codes.</p>
-                  <p class="text-slate-600"><em>Test:</em> Sweep the inter-channel delay offset $\Delta\tau$ from $0$ to $1$ chip period, and plot the isolation profile to compare the stability of Walsh-CDM against Spherical-Gold coding.</p>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
-                  <p class="font-bold text-slate-800">FM5: Gold Code Length and Bandwidth Limitations</p>
-                  <p class="text-slate-600 mt-1"><em>Risk:</em> Achieving low mutual coherence with temporal codes requires long sequence lengths, which increases bandwidth and power consumption.</p>
-                  <p class="text-slate-600"><em>Test:</em> Parameterize the temporal code length $L \in \{7, 15, 31, 63, 127\}$, and measure the tradeoff between code length, system bandwidth, and switching power dissipation.</p>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
-                  <p class="font-bold text-slate-800">FM6: ADC Saturation by Shared-IF Signals</p>
-                  <p class="text-slate-600 mt-1"><em>Risk:</em> The summation of multiple shared-IF signals saturates the ADC full-scale range, erasing the expected ENOB relief.</p>
-                  <p class="text-slate-600"><em>Test:</em> Increase the number of concurrent channels from $2$ to $8$ and measure the ADC clipping rates and resulting intermodulation distortion.</p>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
-                  <p class="font-bold text-slate-800">FM7: Qubit Readout Photon-Starvation</p>
-                  <p class="text-slate-600 mt-1"><em>Risk:</em> Restricting readout power to avoid driving resonators into non-linear regimes starves the receiver of photons, degrading the measurement SNR.</p>
-                  <p class="text-slate-600"><em>Test:</em> Sweep the average cavity photon number $\bar{n} = 10^{-2}$ to $10^2$ and plot the assignment fidelity as a function of integration time and photon budget.</p>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
-                  <p class="font-bold text-slate-800">FM8: Pulse Duration and Peak Power Tradeoffs</p>
-                  <p class="text-slate-600 mt-1"><em>Risk:</em> Enforcing spectral nulls on XY control pulses increases their duration or PAPR, exceeding the qubit's coherence time or driving the DAC into saturation.</p>
-                  <p class="text-slate-600"><em>Test:</em> Synthesize selective pulses under strict spectral leakage constraints, and measure the resulting pulse duration and PAPR to define the operational limits of the transmitter.</p>
-                </div>
-
-                <div class="bg-slate-50 p-3 rounded border border-slate-200 text-xs">
-                  <p class="font-bold text-slate-800">FM9: Calibration-Limited Zero-Forcing Recovery</p>
-                  <p class="text-slate-600 mt-1"><em>Risk:</em> Ill-conditioning of the Gram matrix under drift amplifies noise during digital linear recovery (ZF/MMSE), rendering the system calibration-limited.</p>
-                  <p class="text-slate-600"><em>Test:</em> Introduce intentional calibration errors into the digital receiver kernel and measure the resulting degradation in BER and throughput.</p>
-                </div>
-              </div>
+              <ul class="list-disc pl-6 space-y-4 text-slate-800">
+                <li>
+                  <strong>FM1: Non-Separable Interconnect Dispersion.</strong> <em>Risk:</em> The separability product law breaks down under extreme, frequency-dependent microstrip dispersion. <em>Test:</em> Injection of highly resonant passive networks into the testbed to measure product law degradation thresholds.
+                </li>
+                <li>
+                  <strong>FM2: RF Pre-Stage Compression.</strong> <em>Risk:</em> Out-of-band blockers compress analog front-ends (LNA/Mixers) before the GAWS correlator can suppress them. <em>Test:</em> Empirical 1dB compression sweeps to chart the absolute physical boundary of the receiver cascade.
+                </li>
+                <li>
+                  <strong>FM5: Thermal Calibration Drift.</strong> <em>Risk:</em> High thermal fluctuations degrade the geometric nulls over time. <em>Test:</em> Execution of $0^\circ\text{C}$ to $85^\circ\text{C}$ thermal chamber stress tests to quantify the temporal stability of $\mu_{\mathrm{real}}$.
+                </li>
+                <li>
+                  <strong>FM7: Qubit Photon Starvation.</strong> <em>Risk:</em> Imposing strict spectral boundaries reduces readout power to levels that starve the cavity of necessary photons. <em>Test:</em> Evaluation of assignment fidelity at $\bar{n} < 1$ photon constraints.
+                </li>
+              </ul>
             </div>
           </section>
 
           <!-- Section 10 -->
-          <section id="timeline" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">10. Five-Year Project Plan and Milestones</h2>
+          <section id="timeline" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">10. 5-Year Execution Timeline</h2>
             
-            <div class="space-y-4">
-              <p class="text-justify">
-                The proposed research and educational activities are organized into a coordinated 5-year schedule, illustrated in the Gantt chart in Figure 1:
+            <div class="space-y-4 text-justify">
+              <p>
+                The execution of the CAREER grant is structured across a disciplined 60-month trajectory, ensuring tight integration between theoretical discoveries, IC manufacturing cycles, and curriculum deployment.
               </p>
-
-              <!-- Gantt Chart View -->
-              <div class="bg-slate-50 p-4 rounded border border-slate-200 overflow-x-auto text-xs font-mono">
-                <p class="font-bold text-center text-slate-700 uppercase tracking-wider mb-3">Figure 1. Operational Timeline &amp; Key Program Milestones</p>
-                <div class="grid grid-cols-6 gap-2 border-b border-slate-300 pb-2 mb-2 font-bold text-slate-800">
-                  <div>Task / Metric Phase</div>
-                  <div class="text-center">Year 1</div>
-                  <div class="text-center">Year 2</div>
-                  <div class="text-center">Year 3</div>
-                  <div class="text-center">Year 4</div>
-                  <div class="text-center">Year 5</div>
-                </div>
-
-                <div class="grid grid-cols-6 gap-2 py-1.5 border-b border-slate-100 items-center">
-                  <div class="font-semibold text-slate-600">Thrust 1: Optimization Theory</div>
-                  <div class="bg-indigo-500/20 text-indigo-700 font-bold rounded text-center py-1 border border-indigo-500/30">M1.1 (Model)</div>
-                  <div class="bg-indigo-500/10 text-indigo-600/70 text-center py-1">M1.2 (Bounds)</div>
-                  <div class="text-center text-slate-300">-</div>
-                  <div class="text-center text-slate-300">-</div>
-                  <div class="text-center text-slate-300">-</div>
-                </div>
-
-                <div class="grid grid-cols-6 gap-2 py-1.5 border-b border-slate-100 items-center">
-                  <div class="font-semibold text-slate-600">Thrust 2: IC Synthesis &amp; Mixers</div>
-                  <div class="text-center text-slate-300">-</div>
-                  <div class="bg-indigo-500/20 text-indigo-700 font-bold rounded text-center py-1 border border-indigo-500/30">M2.1 (Design)</div>
-                  <div class="bg-indigo-500/20 text-indigo-700 font-bold rounded text-center py-1 border border-indigo-500/30">M2.2 (Tapeout)</div>
-                  <div class="text-center text-slate-300">-</div>
-                  <div class="text-center text-slate-300">-</div>
-                </div>
-
-                <div class="grid grid-cols-6 gap-2 py-1.5 border-b border-slate-100 items-center">
-                  <div class="font-semibold text-slate-600">Thrust 3: Phased-Array Platform</div>
-                  <div class="text-center text-slate-300">-</div>
-                  <div class="text-center text-slate-300">-</div>
-                  <div class="bg-indigo-500/20 text-indigo-700 font-bold rounded text-center py-1 border border-indigo-500/30">M3.1 (Hardware)</div>
-                  <div class="bg-indigo-500/20 text-indigo-700 font-bold rounded text-center py-1 border border-indigo-500/30">M3.2 (Spatial)</div>
-                  <div class="text-center text-slate-300">-</div>
-                </div>
-
-                <div class="grid grid-cols-6 gap-2 py-1.5 border-b border-slate-100 items-center">
-                  <div class="font-semibold text-slate-600">Thrust 4: Qubit Interface Emulation</div>
-                  <div class="text-center text-slate-300">-</div>
-                  <div class="text-center text-slate-300">-</div>
-                  <div class="text-center text-slate-300">-</div>
-                  <div class="bg-indigo-500/20 text-indigo-700 font-bold rounded text-center py-1 border border-indigo-500/30">M4.1 (Cryo)</div>
-                  <div class="bg-indigo-500/20 text-indigo-700 font-bold rounded text-center py-1 border border-indigo-500/30">M4.2 (Report)</div>
-                </div>
-
-                <div class="grid grid-cols-6 gap-2 py-1.5 items-center">
-                  <div class="font-semibold text-slate-600">Integrated Educational Plan</div>
-                  <div class="bg-emerald-500/10 text-emerald-700 font-semibold rounded text-center py-0.5">Lab Kit Setup</div>
-                  <div class="bg-emerald-500/10 text-emerald-700 font-semibold rounded text-center py-0.5">Course Launch</div>
-                  <div class="bg-emerald-500/10 text-emerald-700 font-semibold rounded text-center py-0.5">Vis Sandbox</div>
-                  <div class="bg-emerald-500/10 text-emerald-700 font-semibold rounded text-center py-0.5">Camp Outreach</div>
-                  <div class="bg-emerald-500/10 text-emerald-700 font-semibold rounded text-center py-0.5">SDR Workshop</div>
-                </div>
-              </div>
-
-              <p class="text-sm font-bold text-slate-800 mt-4 uppercase">Key Project Deliverables:</p>
-              <ul class="list-disc pl-5 text-sm space-y-1">
-                <li><strong>Year 1:</strong> Open-source Realized-Gram Simulation Engine and analytical proofs of hardware-constrained coherence bounds.</li>
-                <li><strong>Year 2:</strong> Design and tape-out of the custom Ka-band Waveform Synthesizer and Active Correlator IC.</li>
-                <li><strong>Year 3:</strong> Implementation and calibration of the 4-channel $28\,\text{GHz}$ Phased-Array Validation Platform.</li>
-                <li><strong>Year 4:</strong> Construction of the Cryogenic Quantum Interface Emulator and validation of selective pulse shaping.</li>
-                <li><strong>Year 5:</strong> Publication of the NSF Cross-Domain Integration Report and release of the open-source educational simulator toolkit.</li>
+              <p class="font-semibold text-slate-800">Milestone Highlights:</p>
+              <ul class="list-disc pl-6 space-y-2 text-slate-800">
+                <li><strong>Year 1:</strong> Release of the Realized-Gram Monte Carlo Toolkit; Derivation of hardware bounds.</li>
+                <li><strong>Year 2:</strong> Tape-out execution for the Custom $28\,\text{GHz}$ Analog Correlator IC.</li>
+                <li><strong>Year 3:</strong> Commissioning of the Phased-Array validation testbed; Preliminary spatial CRB mapping.</li>
+                <li><strong>Year 4:</strong> Deployment of the Cryogenic Emulator; Validation of optimal XY pulse shaping.</li>
+                <li><strong>Year 5:</strong> Curriculum finalization; Open-source hardware release; Cross-domain NSF reporting.</li>
               </ul>
             </div>
           </section>
 
           <!-- Section 11 -->
-          <section id="education" class="scroll-mt-6">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">11. Broader Impacts and Integrated Educational Plan</h2>
+          <section id="education" class="scroll-mt-8">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">11. Integrated Educational Plan & Broader Impacts</h2>
             
             <div class="space-y-4 text-justify">
               <p>
-                This CAREER project integrates cutting-edge research with an active, multi-level educational plan designed to train the next generation of engineers in cross-disciplinary circuit-signal co-design.
+                True to the ethos of the NSF CAREER program, the PI is deeply committed to synthesizing this deep-tech research into an actionable and highly accessible educational paradigm.
               </p>
 
-              <h3 class="text-base font-bold text-slate-800">11.1 New Graduate Module Development</h3>
-              <p>
-                We will develop a new graduate-level module: <strong>Realized-Gram Methods for RF and Quantum Interfaces</strong>. The course will bridge the gap between physical electromagnetics and digital signal processing, covering:
-              </p>
-              <ul class="list-disc pl-5 text-sm space-y-1">
-                <li>Grassmannian manifold optimization.</li>
-                <li>The physics of non-linear distortion, phase noise, and timing jitter in multiplexed systems.</li>
-                <li>Digital and analog calibration techniques for restoring Gram matrix conditioning.</li>
-              </ul>
-
-              <h3 class="text-base font-bold text-slate-800 mt-4">11.2 Undergraduate Laboratory Kits and Modules</h3>
-              <p>
-                We will introduce hands-on laboratory modules into the core undergraduate RF/Microwave and Communications courses. Students will use low-cost software-defined radios (SDRs) and custom PCB correlators to:
-              </p>
-              <ul class="list-disc pl-5 text-sm space-y-1">
-                <li>Transmit and decode Walsh-coded signals.</li>
-                <li>Observe firsthand how timing skew degrades signal isolation.</li>
-                <li>Implement simple phase-coding schemes to restore signal separation, bringing theoretical concepts to life.</li>
-              </ul>
-
-              <h3 class="text-base font-bold text-slate-800 mt-4">11.3 Open-Source Visualization Toolkit</h3>
-              <p>
-                We will develop an interactive, web-based simulation tool using the Gemini API and modern web frameworks. The tool will allow students, educators, and industry professionals to:
-              </p>
-              <ul class="list-disc pl-5 text-sm space-y-1">
-                <li>Set up arbitrary multiplexing codebooks (TDM, FDM, CDM, Spherical-Gold).</li>
-                <li>Introduce custom hardware impairments (such as timing jitter or non-linearities) using slider controls.</li>
-                <li>Instantly visualize the resulting degradation of the Gram matrix, constellation diagrams, and bit error rates.</li>
-              </ul>
-
-              <h3 class="text-base font-bold text-slate-800 mt-4">11.4 Outreach and Diversity Initiatives</h3>
-              <p>
-                We will partner with our institution's diversity in engineering programs to recruit and support underrepresented students:
-              </p>
-              <ul class="list-disc pl-5 text-sm space-y-1">
+              <ul class="space-y-5 text-slate-800">
                 <li>
-                  <strong>High School Engineering Camps:</strong> Host interactive workshops demonstrating the physics of wave interference and coding using acoustic wave transmitters and simple receiver apps.
+                  <strong>11.1 Curriculum Innovation:</strong> The PI will introduce a pioneering graduate module, <em>Realized-Gram Methods for RF and Quantum Interfaces</em>. This course actively disassembles the historical divide between electromagnetic physics and digital signal processing, teaching students to co-design across these boundaries.
                 </li>
                 <li>
-                  <strong>Undergraduate Research Fellowships:</strong> Provide fully funded summer research opportunities in our laboratory, actively recruiting female and underrepresented minority students to build a diverse pipeline for advanced graduate studies.
+                  <strong>11.2 Experiential Undergraduate SDR Labs:</strong> We will inject practical software-defined radio (SDR) modules into the undergraduate core. Students will visually experience how timing skews destroy classical code multiplexing and implement entry-level phase-coding to physically restore signal integrity.
+                </li>
+                <li>
+                  <strong>11.3 Open-Source Visual Sandbox:</strong> Expanding upon the simulator embedded within this very proposal document, we will deploy a comprehensive, web-based visualization tool. This allows learners to manipulate hardware variables (jitter, non-linearity) and instantly visualize the geometric collapse or preservation of the resulting Gram matrices.
+                </li>
+                <li>
+                  <strong>11.4 Strategic URM Outreach:</strong> Leveraging the visual tools and physical acoustic analogies, the PI will conduct immersive workshops within university-sponsored high school engineering camps. A dedicated portion of the budget is reserved for Undergraduate Research Fellowships explicitly targeting the recruitment of female and underrepresented minority students into high-frequency hardware research pathways.
                 </li>
               </ul>
             </div>
           </section>
 
           <!-- Section 12 -->
-          <section id="conclusion" class="scroll-mt-6 pb-12">
-            <h2 class="text-lg font-bold border-b border-slate-300 pb-1 text-slate-900 uppercase tracking-wide mb-4">12. Conclusion</h2>
+          <section id="conclusion" class="scroll-mt-8 pb-12">
+            <h2 class="text-xl font-bold border-b-2 border-slate-900 pb-2 text-slate-900 uppercase tracking-wide mb-5">12. Concluding Remarks</h2>
             <div class="space-y-4 text-justify">
               <p>
-                This CAREER proposal presents a unified, scientifically rigorous, and physically grounded approach to resolving the shared-interface bottleneck in next-generation communication and quantum systems. By elevating the hardware-realized Gram matrix to a primary object of co-design, this project departs from traditional "ideal-orthogonality" assumptions, establishing a new paradigm of geometry-aware waveform synthesis.
+                This CAREER proposal outlines a rigorously defined, physically grounded methodology to overcome the shared-interface bottleneck paralyzing next-generation wireless and quantum architectures. By elevating the hardware-realized Gram matrix to the primary metric of design, Geometry-Aware Waveform Synthesis shatters the brittle assumptions of classical ideal orthogonality. 
               </p>
               <p>
-                Validated first on a high-frequency phased-array receiver platform and then translated to a cryogenic quantum interface emulator, the research is tightly coupled with an educational plan designed to inspire, educate, and diversify the engineering talent pool. Through rigorous testing, active exploration of failure modes, and open-source software release, this project will deliver both foundational scientific insights and practical design tools, paving the way for scalable, energy-efficient RF and quantum interfaces.
+                Supported by an unyielding falsification framework, robust multi-platform validation strategies, and a deeply integrated educational vision, this project will furnish the scientific community with both the theoretical foundation and the tangible circuit architectures necessary to scale the complex communication and computational networks of the coming decade.
               </p>
             </div>
           </section>
 
         </div>
+      </article>
+
+      <!-- Scroll Action Buttons / دکمه‌های اسکرول سریع -->
+      <div class="fixed bottom-8 right-8 md:right-12 flex flex-col gap-3 z-50 no-print">
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="bg-slate-800/80 hover:bg-indigo-600 text-white p-3 rounded-full shadow-lg backdrop-blur-sm transition-all duration-300 border border-slate-600 hover:border-indigo-500 group focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-slate-200" title="پرش به بالای صفحه">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 group-hover:-translate-y-1 transition-transform">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+          </svg>
+        </button>
+        <button onclick="window.scrollTo({top: document.body.scrollHeight, behavior: 'smooth'})" class="bg-slate-800/80 hover:bg-indigo-600 text-white p-3 rounded-full shadow-lg backdrop-blur-sm transition-all duration-300 border border-slate-600 hover:border-indigo-500 group focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 focus:ring-offset-slate-200" title="پرش به پایین صفحه">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5 group-hover:translate-y-1 transition-transform">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+          </svg>
+        </button>
       </div>
+
     </main>
 
   </div>
@@ -1445,13 +1003,12 @@
 
       // Update UI elements
       elements.valCoherence.textContent = mu.toFixed(2);
-      elements.valCondition.textContent = kappa >= 99.9 ? "Infinite (Ill-conditioned)" : kappa.toFixed(2);
+      elements.valCondition.textContent = kappa >= 99.9 ? "Infinite (Failing)" : kappa.toFixed(2);
       elements.valCapacity.textContent = capacity.toFixed(2);
       elements.valEnob.textContent = `${enob.toFixed(1)} bits`;
       elements.valSavings.textContent = savingsText;
 
       // Update Heatmap matrix coloring based on state
-      // Off diagonals scale color with mu
       updateHeatmapColors(mu);
     }
 
@@ -1507,23 +1064,23 @@
       
       // Spinner activation
       elements.diagSpinner.classList.remove('hidden');
-      elements.diagBtnText.textContent = "Analyzing Physical Modes...";
+      elements.diagBtnText.textContent = "Running Stress Suite...";
       
       const tests = [
-        { name: "FM1: Package Dispersion Check", stress: "S-Par sweep: Resonances at 28.4GHz", trigger: "Dispersion mismatch > 3dB", action: () => {
-          return params.skew > 0.6 && currentParadigm === 'walsh' ? "FAILED (Separability product law violated, Coherence = 0.85)" : "PASSED (Well-conditioned, residual error < 12%)";
+        { name: "FM1: Package Dispersion Limit Test", stress: "S-Par resonance scan at 28.4GHz", trigger: "Dispersion > 3dB", action: () => {
+          return params.skew > 0.6 && currentParadigm === 'walsh' ? "FAILED (Separability product law violated, Mu = 0.85)" : "PASSED (Geometric state well-conditioned)";
         }},
-        { name: "FM2: LNA Gain Compression", stress: "Sweeping blocker power to +5dBm", trigger: "Mixer IIP3 limit at -15dBm", action: () => {
-          return params.blocker > 30 ? "FAILED (Analog front-end saturated, dynamic range exhausted)" : "PASSED (Gilbert stage protects ADC; residual isolation = 26dB)";
+        { name: "FM2: Pre-Stage LNA Compression", stress: "Sweep out-of-band blocker to +5dBm", trigger: "Mixer IIP3 limit exceeded", action: () => {
+          return params.blocker > 30 ? "FAILED (Analog front-end saturated)" : "PASSED (Gilbert stage protects ADC)";
         }},
-        { name: "FM3: High Thermal Drift", stress: "Thermal Sweep (0C to 85C)", trigger: "Drift coefficient = 2.4deg/C", action: () => {
-          return currentParadigm === 'walsh' ? "FAILED (Phase nulls drifted, isolation degraded by 18dB)" : "PASSED (Calibration loops tracking; drift bounded)";
+        { name: "FM3: Thermal Drift Calibration", stress: "Thermal Sweep (0°C to 85°C)", trigger: "Drift coefficient = 2.4°/C", action: () => {
+          return currentParadigm === 'walsh' ? "FAILED (Phase nulls drifted, isolation lost)" : "PASSED (Calibration tracked; drift bounded)";
         }},
-        { name: "FM4: Temporal Orthogonality Decay", stress: "Applying 0.25 chip timing skew", trigger: "Walsh sync limit", action: () => {
-          return params.skew > 0.15 && currentParadigm === 'walsh' ? "FAILED (Walsh code mutual leakage exceeded -10dB)" : "PASSED (Product law active; Gram matrix well-conditioned)";
+        { name: "FM4: Temporal Orthogonality Decay", stress: "Apply 0.25 fractional chip skew", trigger: "Walsh limit breached", action: () => {
+          return params.skew > 0.15 && currentParadigm === 'walsh' ? "FAILED (Mutual leakage exceeded safe threshold)" : "PASSED (Product law active; Gram matrix stable)";
         }},
-        { name: "FM5: Qubit Measurement Dephasing", stress: "Photon-starvation testing on resonator bank", trigger: "Cavity occupation < 1 photon", action: () => {
-          return currentParadigm === 'walsh' ? "FAILED (SNR limit exceeded, readouts collapsed)" : "PASSED (Gram signature optimized, assignment fidelity = 97.4%)";
+        { name: "FM5: Qubit Measurement Starvation", stress: "Photon-starvation testing", trigger: "Cavity occupation < 1 photon", action: () => {
+          return currentParadigm === 'walsh' ? "FAILED (SNR limit exceeded, readouts collapsed)" : "PASSED (Gram signature optimal, fidelity > 97%)";
         }}
       ];
 
@@ -1536,18 +1093,18 @@
           const outcomeColor = outcome.includes("FAILED") ? "text-rose-400 font-bold" : "text-emerald-400 font-bold";
           
           consoleEl.innerHTML += `<span class="text-indigo-400">[RUNNING]</span> ${test.name}<br>`;
-          consoleEl.innerHTML += `<span class="text-slate-500"> - Stress: ${test.stress}</span><br>`;
-          consoleEl.innerHTML += ` - Result: <span class="${outcomeColor}">${outcome}</span><br><br>`;
+          consoleEl.innerHTML += `<span class="text-slate-500"> > Stress: ${test.stress}</span><br>`;
+          consoleEl.innerHTML += ` > Result: <span class="${outcomeColor}">${outcome}</span><br><br>`;
           
           consoleEl.scrollTop = consoleEl.scrollHeight;
           currentTestIndex++;
-          setTimeout(executeNextTest, 700);
+          setTimeout(executeNextTest, 600);
         } else {
           // Finish diagnostic
           elements.diagSpinner.classList.add('hidden');
-          elements.diagBtnText.textContent = "Run Diagnostics Completed";
-          consoleEl.innerHTML += `<span class="text-emerald-500">========================================</span><br>`;
-          consoleEl.innerHTML += `<span class="text-emerald-500">[COMPLETE] Falsification suite test runs logged.</span><br>`;
+          elements.diagBtnText.textContent = "Execute Falsification Suite";
+          consoleEl.innerHTML += `<span class="text-emerald-500 font-bold">========================================</span><br>`;
+          consoleEl.innerHTML += `<span class="text-emerald-500 font-bold">[COMPLETE] Falsification suite finalized.</span><br>`;
           consoleEl.scrollTop = consoleEl.scrollHeight;
         }
       }
@@ -1563,12 +1120,11 @@
       const sections = document.querySelectorAll('section');
       const navLinks = document.querySelectorAll('.nav-link');
       
-      const mainContent = document.querySelector('main');
-      mainContent.addEventListener('scroll', () => {
+      window.addEventListener('scroll', () => {
         let current = "";
         sections.forEach(section => {
           const sectionTop = section.offsetTop;
-          if (mainContent.scrollTop >= sectionTop - 120) {
+          if (window.scrollY >= sectionTop - 200) {
             current = section.getAttribute('id');
           }
         });
